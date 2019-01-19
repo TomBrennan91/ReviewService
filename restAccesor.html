@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Text Input Control</title>
+   </head>
+   <body>
+		<h1>IMDB Score Getter</h2>
+		<form id="form"> 
+		
+		<textarea name="title" rows="10" cols="60" ></textarea>
+		
+		</form>
+		<br>
+
+		<button type="button" onclick="loadDoc()">Get IMDB Scores</button>
+		<br>
+		<br>
+		<textarea id="output" rows="100" cols="60" ></textarea>
+		
+		<script>
+			function loadDoc(){
+				var title = document.forms["form"].elements[0].value;
+				var xhttp = new  XMLHttpRequest();
+				var responses = {};
+				var getData = function(item){
+					console.log(item);				
+					xhttp.open("GET","http://localhost:8080/review?titles=" + item,true);
+					xhttp.send();
+				}
+				
+				getData(title.replace(/\n/g,"~"));
+		
+				xhttp.onreadystatechange = function(){
+					if (this.readyState == 4 && this.status == 200) {
+						
+						var responseObj = JSON.parse(this.responseText);
+
+						for (var i = 0 ; i < responseObj.length  ; i++){
+						  document.getElementById("output").innerHTML = document.getElementById("output").innerHTML 
+						  + responseObj[i]["title"]
+						  + " (" + responseObj[i]["year"] + ")"
+						  + " [" + responseObj[i]["imdbRating"] +"/10]" + "\n"; 
+						}
+					  
+					  
+
+					}
+				};
+				
+				function sleep(ms) {
+				  return new Promise(resolve => setTimeout(resolve, ms));
+				}
+			}
+		</script>
+   </body>
+	
+</html>
