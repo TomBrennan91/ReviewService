@@ -41,32 +41,18 @@ public class Review {
                 '}';
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+
 
     public String getYear() {
         return year;
-    }
-
-    public void setYear(String year) {
-        this.year = year;
     }
 
     public String getRuntime() {
         return runtime;
     }
 
-    public void setRuntime(String runtime) {
-        this.runtime = runtime;
-    }
-
     public String getImdbRating() {
         return imdbRating;
-    }
-
-    public void setImdbRating(String imdbRating) {
-        this.imdbRating = imdbRating;
     }
 
     public String getImdbVotes() {

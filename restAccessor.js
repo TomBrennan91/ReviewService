@@ -28,8 +28,19 @@ function updateOutput(data){
     for (var i = 0 ; i < responseObj.length  ; i++){
         document.getElementById("output").innerHTML = document.getElementById("output").innerHTML
         + responseObj[i]["title"]
-        + " (" + responseObj[i]["year"] + ")"
-        + " [" + responseObj[i]["imdbRating"] +"/10]" + "\n";
+        + getAdditionalInfo("year", responseObj[i])
+        + " [" + responseObj[i]["imdbRating"] +"/10]"
+        + getAdditionalInfo("runtime", responseObj[i])
+        + getAdditionalInfo("imdbVotes", responseObj[i])
+        + "\n";
+    }
+}
+
+function getAdditionalInfo(parameterName, review){
+    if(document.getElementById(parameterName + "Box").checked){
+        return " (" + review[parameterName] + ")"
+    } else {
+        return ""
     }
 }
 
