@@ -13,7 +13,7 @@ public class ReviewController {
     @CrossOrigin
     @PostMapping("/review")
     public ArrayList<Review> reviews(@RequestBody String input, @RequestParam(value = "sort", defaultValue = "")String sorting){
-
+        System.out.println(counter.incrementAndGet());
         System.out.println("sorting = " + sorting);
         System.out.println(input);
         String titles[] = input.split("~");
