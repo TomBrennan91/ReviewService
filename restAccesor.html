@@ -22,7 +22,7 @@
             <input type="checkbox" id="imdbVotesBox"> IMDB Votes
         </form>
 
-        <form id ="filters"> Filter by:
+        <form id ="filters"> Filter by:<br>
             <input type="checkbox" id="votesFilterBox"> Votes <br>
             <input type="checkbox" id="yearFilterBox"> Year <br>
             <input type="checkbox" id="runtimeFilterBox"> Runtime
@@ -31,7 +31,15 @@
         <button type="button" onclick="postAndUpdate()"> Get IMDB Scores</button>
         <br>
         <br>
-        <textarea id="output" rows="100" cols="100" ></textarea>
+        <textarea id="output" rows="10" cols="100" ></textarea>
+
+        <table id="outputTable">
+            <tr>
+                <!--<th>Title</th>-->
+                <!--<th>IMDB Rating</th>-->
+                <!--<th>Year</th>-->
+            </tr>
+        </table>
 
         <script type="text/javascript" src="jquery-3.3.1.js"></script>
         <script src="restAccessor.js"></script>

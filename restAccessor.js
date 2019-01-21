@@ -25,14 +25,28 @@ function updateOutput(data){
     console.log(data);
     document.getElementById("output").innerHTML = ""
     var responseObj = JSON.parse(data);
+
+    var outputTable = document.getElementById("outputTable");
+    var headerRow = outputTable.insertRow(0);
+
+    var headerCell = document.createElement("TH");
+    headerCell.innerHTML = "Title";
+    headerRow.appendChild(headerCell);
+
     for (var i = 0 ; i < responseObj.length  ; i++){
         document.getElementById("output").innerHTML = document.getElementById("output").innerHTML
-        + responseObj[i]["title"]
-        + getAdditionalInfo("year", responseObj[i])
-        + " [" + responseObj[i]["imdbRating"] +"/10]"
-        + getAdditionalInfo("runtime", responseObj[i])
-        + getAdditionalInfo("imdbVotes", responseObj[i])
-        + "\n";
+            + responseObj[i]["title"]
+            + getAdditionalInfo("year", responseObj[i])
+            + " [" + responseObj[i]["imdbRating"] +"/10]"
+            + getAdditionalInfo("runtime", responseObj[i])
+            + getAdditionalInfo("imdbVotes", responseObj[i])
+            + "\n";
+
+
+        var row = outputTable.insertRow(i + 1);
+        row.insertCell(0).innerHTML = responseObj[i]["title"];
+
+
     }
 }
 
