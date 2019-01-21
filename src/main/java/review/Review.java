@@ -69,6 +69,10 @@ public class Review {
         this.imdbRating = imdbRating;
     }
 
+    public String getImdbVotes() {
+        return imdbVotes;
+    }
+
     public static String getHTML(String urlToRead) throws Exception {
         StringBuilder result = new StringBuilder();
         URL url = new URL(urlToRead);

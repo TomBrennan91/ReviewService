@@ -20,7 +20,6 @@ public class ReviewController {
         System.out.println("sorting = " + sorting);
         System.out.println(input);
         String titles[] = input.split("~");
-
         System.out.println(titles[titles.length -1]);
 
         ArrayList<Review> reviews = new ArrayList<>();
@@ -40,7 +39,20 @@ public class ReviewController {
         }
 
         System.out.println(titles.length + " -> " + reviews.size());
-        Collections.sort(reviews , (a,b) -> b.getImdbRating().compareToIgnoreCase(a.getImdbRating()));
+        switch (sorting){
+            case "":
+                break;
+            case "year":
+                Collections.sort(reviews , (a,b) -> b.getYear().compareToIgnoreCase(a.getYear()));
+                break;
+            case "score":
+                Collections.sort(reviews , (a,b) -> b.getImdbRating().compareToIgnoreCase(a.getImdbRating()));
+                break;
+            case "name":
+                Collections.sort(reviews , (a,b) -> b.getTitle().compareToIgnoreCase(a.getTitle()));
+                break;
+        }
+        
         reviews.forEach(System.out::println);
         return reviews;
     }
