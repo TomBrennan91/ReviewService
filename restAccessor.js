@@ -1,4 +1,7 @@
-
+function postAndUpdate(){
+    var titles = document.forms["form"].elements[0].value;
+    postAjax('http://localhost:8080/review', titles , function (data){updateOutput(data);});
+}
 
 function postAjax(url, data, success) {
     var params = typeof data == 'string' ? data : Object.keys(data).map(
@@ -16,14 +19,12 @@ function postAjax(url, data, success) {
     return xhr;
 }
 
-
-function postAndUpdate(){
-    var titles = document.forms["form"].elements[0].value;
-    postAjax('http://localhost:8080/review', titles , function (data){updateOutput(data);});
-}
-
 function updateOutput(data){
+
+
+    console.log(getSortingParameter());
     console.log(data);
+    document.getElementById("output").innerHTML = ""
     var responseObj = JSON.parse(data);
     for (var i = 0 ; i < responseObj.length  ; i++){
         document.getElementById("output").innerHTML = document.getElementById("output").innerHTML
@@ -31,4 +32,16 @@ function updateOutput(data){
         + " (" + responseObj[i]["year"] + ")"
         + " [" + responseObj[i]["imdbRating"] +"/10]" + "\n";
     }
+}
+
+function getSortingParameter(){
+    var sortingParameter = "";
+    if (document.getElementById('rating').checked){
+        sortingParameter = document.getElementById('rating').value;
+    } else if (document.getElementById('name').checked){
+        sortingParameter = document.getElementById('name').value;
+    } else if (document.getElementById('year').checked){
+        sortingParameter = document.getElementById('year').value;
+    } 
+    return sortingParameter;
 }

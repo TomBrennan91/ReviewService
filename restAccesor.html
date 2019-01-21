@@ -1,27 +1,26 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Text Input Control</title>
-</head>
-<body>
-    <img src="imdb_logo.jpg" alt="IMDB Logo"><p> Score Aggregator</p>
-    <form id="form">
-        <textarea name="title" rows="10" cols="60" ></textarea>
-    </form>
-    <br>
+    <head>
+        <title>Review Aggregator Aggregator</title>
+    </head>
+    <body>
+        <img src="imdb_logo.jpg" alt="IMDB Logo"><p> Score Aggregator</p>
+        <form id="form">
+            <textarea name="title" rows="10" cols="60" ></textarea>
+        </form>
+        <br>
 
-    <form action=""> Sort By:
-        <input type="radio" name="sorting" value="rating"> Rating
-        <input type="radio" name="sorting" value="name"> Name
-        <input type="radio" name="sorting" value="year"> Year
-        <button type="button" onclick="postAndUpdate()">Get IMDB Scores</button>
-    </form>
-    <br>
-    <br>
-    <textarea id="output" rows="100" cols="60" ></textarea>
+        <form action="" id="radiobuttons"> Sort By:
+            <input type="radio" name="sorting" value="rating" id="rating"> Rating
+            <input type="radio" name="sorting" value="name" id="name"> Name
+            <input type="radio" name="sorting" value="year" id="year"> Year
+            <button type="button" onclick="postAndUpdate()">Get IMDB Scores</button>
+        </form>
+        <br>
+        <br>
+        <textarea id="output" rows="100" cols="60" ></textarea>
 
-    <script type="text/javascript" src="jquery-3.3.1.js"></script>
-    <script src="restAccessor.js"></script>
-</body>
-
+        <script type="text/javascript" src="jquery-3.3.1.js"></script>
+        <script src="restAccessor.js"></script>
+    </body>
 </html>
