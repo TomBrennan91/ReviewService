@@ -9,15 +9,26 @@
             <textarea name="title" rows="10" cols="100" ></textarea>
         </form>
         <br>
-
-        <form action="" id="radiobuttons"> Sort By:
-            <input type="radio" name="sorting" value="rating" id="rating"> Rating
-            <input type="radio" name="sorting" value="name" id="name"> Name
-            <input type="radio" name="sorting" value="year" id="year"> Year
-            <input type="radio" name="sorting" value="votes" id="votes"> Votes
-            <input type="radio" name="sorting" value="votes" id="runtime"> Runtime
-            <button type="button" onclick="postAndUpdate()"> Get IMDB Scores</button>
+        <form action="" id="sorting"> Sort By:
+            <input type="radio"  id="rating"> Rating
+            <input type="radio"  id="name"> Name
+            <input type="radio"  id="year"> Year
+            <input type="radio"  id="votes"> Votes
+            <input type="radio"  id="runtime"> Runtime
         </form>
+        <form id ="info"> Additional Information:
+            <input type="checkbox" id="votesBox"> Votes
+            <input type="checkbox" id="yearBox"> Year
+            <input type="checkbox" id="runtimeBox"> Runtime
+        </form>
+
+        <form id ="filters"> Filter by:
+            <input type="checkbox" id="votesFilterBox"> Votes <br>
+            <input type="checkbox" id="yearFilterBox"> Year <br>
+            <input type="checkbox" id="runtimeFilterBox"> Runtime
+        </form>
+        <br>
+        <button type="button" onclick="postAndUpdate()"> Get IMDB Scores</button>
         <br>
         <br>
         <textarea id="output" rows="100" cols="100" ></textarea>
