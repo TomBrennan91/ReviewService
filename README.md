@@ -1,7 +1,7 @@
 # ReviewService
 Simply paste in a list of Movies and/or TV shows and it will return the same list sorted by IMDB score. 
 
-I got the idea for this webapp when I realised both me and my girlfreind occassionally spend a lot of time looking up numerous films on
+I got the idea for this webapp when I realised both me and my girlfriend occassionally spend a lot of time looking up numerous films on
 metacritic/IMDB when trying to decide what to watch. Now one can simply paste in:
 
 Homeland
