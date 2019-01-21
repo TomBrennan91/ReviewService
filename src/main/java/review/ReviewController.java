@@ -52,14 +52,10 @@ public class ReviewController {
                 Collections.sort(reviews , (a,b) -> b.getTitle().compareToIgnoreCase(a.getTitle()));
                 break;
         }
-        
+
         reviews.forEach(System.out::println);
         return reviews;
     }
-
-
-
-
 
 }
 
