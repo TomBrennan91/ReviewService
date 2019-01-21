@@ -15,7 +15,6 @@ public class ReviewController {
     public ArrayList<Review> reviews(@RequestBody String input, @RequestParam(value = "sort", defaultValue = "")String sorting){
         System.out.println("request: " + counter.incrementAndGet());
         System.out.println("sorting = " + sorting);
-        System.out.println(input);
         String titles[] = input.split("~");
         System.out.println(titles[titles.length -1]);
 
@@ -24,7 +23,6 @@ public class ReviewController {
         for (String title : titles){
             try {
                 Review review = Review.getReviewFromTitle(title);
-                //System.out.println(review.toString());
                 if (review.getImdbRating() != null) {
                     reviews.add(review);
                 } else {
@@ -48,6 +46,11 @@ public class ReviewController {
             case "name":
                 reviews.sort((a,b) -> a.getTitle().compareToIgnoreCase(b.getTitle()));
                 break;
+            case "votes":
+                reviews.sort((a,b) -> b.getImdbVotes().compareToIgnoreCase(a.getImdbVotes()));
+                break;
+            case "runtime":
+                reviews.sort((a,b) -> a.getRuntime().compareToIgnoreCase(b.getRuntime()));
         }
 
         reviews.forEach(System.out::println);

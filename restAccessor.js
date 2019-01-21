@@ -36,11 +36,15 @@ function updateOutput(data){
 function getSortingParameter(){
     var sortingParameter = "";
     if (document.getElementById('rating').checked){
-        sortingParameter = document.getElementById('rating').value;
+        sortingParameter = "rating"
     } else if (document.getElementById('name').checked){
-        sortingParameter = document.getElementById('name').value;
+        sortingParameter = "name"
     } else if (document.getElementById('year').checked){
-        sortingParameter = document.getElementById('year').value;
+        sortingParameter = "year";
+    } else if (document.getElementById('votes').checked){
+        sortingParameter = "votes";
+    } else if (document.getElementById('runtime').checked){
+        sortingParameter = "runtime";
     }
     console.log(sortingParameter)
     return sortingParameter;
