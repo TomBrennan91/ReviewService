@@ -4,7 +4,10 @@
         <title>Review Aggregator Aggregator</title>
     </head>
     <body>
-        <img src="imdb_logo.jpg" alt="IMDB Logo"><p> Score Aggregator</p>
+        <img src="imdb_logo.jpg" alt="IMDB Logo">
+        <img src="metacritic_logo.jpg" alt="Metacritic Logo">
+        <img src="Rotten_Tomatoes_logo.png" alt="Rotten Tomatoes Logo">
+        <p> Score Aggregator</p>
         <form id="form">
             <textarea name="title" rows="10" cols="100" ></textarea>
         </form>
@@ -31,15 +34,9 @@
         <button type="button" onclick="postAndUpdate()"> Get IMDB Scores</button>
         <br>
         <br>
-        <textarea id="output" rows="10" cols="100" ></textarea>
+        <!--<textarea id="output" rows="10" cols="100" ></textarea>-->
 
-        <table id="outputTable">
-            <!--<tr>-->
-                <!--<th>Title</th>-->
-                <!--<th>IMDB Rating</th>-->
-                <!--<th>Year</th>-->
-            <!--</tr>-->
-        </table>
+        <table id="outputTable"></table>
 
         <script type="text/javascript" src="jquery-3.3.1.js"></script>
         <script src="restAccessor.js"></script>

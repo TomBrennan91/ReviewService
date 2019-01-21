@@ -25,7 +25,7 @@ function updateOutput(data){
     getColumnHeaders();
 
     console.log(data);
-    document.getElementById("output").innerHTML = ""
+//    document.getElementById("output").innerHTML = ""
     var responseObj = JSON.parse(data);
 
     var outputTable = document.getElementById("outputTable");
@@ -34,13 +34,13 @@ function updateOutput(data){
     var columnHeaders = getColumnHeaders();
 
     for (var i = 0 ; i < responseObj.length  ; i++){
-        document.getElementById("output").innerHTML = document.getElementById("output").innerHTML
-            + responseObj[i]["title"]
-            + getAdditionalInfo("year", responseObj[i])
-            + " [" + responseObj[i]["imdbRating"] +"/10]"
-            + getAdditionalInfo("runtime", responseObj[i])
-            + getAdditionalInfo("imdbVotes", responseObj[i])
-            + "\n";
+//        document.getElementById("output").innerHTML = document.getElementById("output").innerHTML
+//            + responseObj[i]["title"]
+//            + getAdditionalInfo("year", responseObj[i])
+//            + " [" + responseObj[i]["imdbRating"] +"/10]"
+//            + getAdditionalInfo("runtime", responseObj[i])
+//            + getAdditionalInfo("imdbVotes", responseObj[i])
+//            + "\n";
 
 
         var row = outputTable.insertRow(i + 1);
@@ -80,12 +80,10 @@ function getColumnHeaders(){
     var columnHeaders = ["title", "imdbRating"];
     var optionalHeaders = document.getElementsByClassName("info");
     for (let item of optionalHeaders){
-        console.log(item);
         if(item.checked){
             columnHeaders.push(item.id.replace("Box",""));
         }
     }
-    console.log(columnHeaders);
     return columnHeaders;
 }
 
