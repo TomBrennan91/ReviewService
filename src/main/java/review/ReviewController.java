@@ -1,16 +1,13 @@
 package review;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.concurrent.atomic.AtomicLong;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 public class ReviewController {
 
-    private static final String template = "Hello, %s!";
     private final AtomicLong counter = new AtomicLong();
 
     @CrossOrigin
@@ -43,13 +40,13 @@ public class ReviewController {
             case "":
                 break;
             case "year":
-                Collections.sort(reviews , (a,b) -> b.getYear().compareToIgnoreCase(a.getYear()));
+                reviews.sort((a,b) -> b.getYear().compareToIgnoreCase(a.getYear()));
                 break;
             case "score":
-                Collections.sort(reviews , (a,b) -> b.getImdbRating().compareToIgnoreCase(a.getImdbRating()));
+                reviews.sort((a,b) -> b.getImdbRating().compareToIgnoreCase(a.getImdbRating()));
                 break;
             case "name":
-                Collections.sort(reviews , (a,b) -> b.getTitle().compareToIgnoreCase(a.getTitle()));
+                reviews.sort((a,b) -> b.getTitle().compareToIgnoreCase(a.getTitle()));
                 break;
         }
 
