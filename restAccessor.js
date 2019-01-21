@@ -1,7 +1,7 @@
 function postAndUpdate(){
     var sortingParameter = getSortingParameter();
     var titles = document.forms["form"].elements[0].value;
-    postAjax('http://localhost:8080/review?sort' + sortingParameter, titles , function (data){updateOutput(data);});
+    postAjax('http://localhost:8080/review?sort=' + sortingParameter, titles , function (data){updateOutput(data);});
 }
 
 function postAjax(url, data, success) {
@@ -41,5 +41,6 @@ function getSortingParameter(){
     } else if (document.getElementById('year').checked){
         sortingParameter = document.getElementById('year').value;
     }
+    console.log(sortingParameter)
     return sortingParameter;
 }
