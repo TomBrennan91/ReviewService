@@ -16,10 +16,10 @@
             <input type="radio" name="sorting" id="votes"> IMDB Votes
             <input type="radio" name="sorting"  id="runtime"> Runtime
         </form>
-        <form id ="info"> Additional Information:
-            <input type="checkbox" id="yearBox" checked> Year
-            <input type="checkbox" id="runtimeBox" checked> Runtime
-            <input type="checkbox" id="imdbVotesBox"> IMDB Votes
+        <form id ="info" name="info"> Additional Information:
+            <input class="info" type="checkbox" id="yearBox" checked> Year
+            <input class="info" type="checkbox" id="runtimeBox" checked> Runtime
+            <input class="info" type="checkbox" id="imdbVotesBox"> IMDB Votes
         </form>
 
         <form id ="filters"> Filter by:<br>
@@ -34,11 +34,11 @@
         <textarea id="output" rows="10" cols="100" ></textarea>
 
         <table id="outputTable">
-            <tr>
+            <!--<tr>-->
                 <!--<th>Title</th>-->
                 <!--<th>IMDB Rating</th>-->
                 <!--<th>Year</th>-->
-            </tr>
+            <!--</tr>-->
         </table>
 
         <script type="text/javascript" src="jquery-3.3.1.js"></script>

@@ -22,16 +22,16 @@ function postAjax(url, data, success) {
 }
 
 function updateOutput(data){
+    getColumnHeaders();
+
     console.log(data);
     document.getElementById("output").innerHTML = ""
     var responseObj = JSON.parse(data);
 
     var outputTable = document.getElementById("outputTable");
-    var headerRow = outputTable.insertRow(0);
 
-    var headerCell = document.createElement("TH");
-    headerCell.innerHTML = "Title";
-    headerRow.appendChild(headerCell);
+    printColumnHeaders();
+    var columnHeaders = getColumnHeaders();
 
     for (var i = 0 ; i < responseObj.length  ; i++){
         document.getElementById("output").innerHTML = document.getElementById("output").innerHTML
@@ -44,8 +44,9 @@ function updateOutput(data){
 
 
         var row = outputTable.insertRow(i + 1);
-        row.insertCell(0).innerHTML = responseObj[i]["title"];
-
+        for (columnIdx in columnHeaders){
+            row.insertCell(columnIdx).innerHTML = responseObj[i][columnHeaders[columnIdx]];
+        }
 
     }
 }
@@ -73,4 +74,32 @@ function getSortingParameter(){
     }
     console.log(sortingParameter)
     return sortingParameter;
+}
+
+function getColumnHeaders(){
+    var columnHeaders = ["title", "imdbRating"];
+    var optionalHeaders = document.getElementsByClassName("info");
+    for (let item of optionalHeaders){
+        console.log(item);
+        if(item.checked){
+            columnHeaders.push(item.id.replace("Box",""));
+        }
+    }
+    console.log(columnHeaders);
+    return columnHeaders;
+}
+
+function printColumnHeaders(){
+    var columnHeaders = getColumnHeaders();
+    var outputTable = document.getElementById("outputTable");
+    var headerRow = outputTable.insertRow(0);
+    for (columnIdx in columnHeaders){
+        var headerCell = document.createElement("TH");
+        headerCell.innerHTML = upperFirstLetter(columnHeaders[columnIdx]);
+        headerRow.appendChild(headerCell);
+    }
+}
+
+function upperFirstLetter(string){
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
