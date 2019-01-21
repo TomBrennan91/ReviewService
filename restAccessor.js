@@ -1,6 +1,7 @@
 function postAndUpdate(){
     var sortingParameter = getSortingParameter();
     var titles = document.forms["form"].elements[0].value;
+    titles = titles.replace(/\n/g,"~");
     postAjax('http://localhost:8080/review?sort=' + sortingParameter, titles , function (data){updateOutput(data);});
 }
 

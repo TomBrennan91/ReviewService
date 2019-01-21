@@ -13,7 +13,7 @@ public class ReviewController {
     @CrossOrigin
     @PostMapping("/review")
     public ArrayList<Review> reviews(@RequestBody String input, @RequestParam(value = "sort", defaultValue = "")String sorting){
-        System.out.println(counter.incrementAndGet());
+        System.out.println("request: " + counter.incrementAndGet());
         System.out.println("sorting = " + sorting);
         System.out.println(input);
         String titles[] = input.split("~");
@@ -46,7 +46,7 @@ public class ReviewController {
                 reviews.sort((a,b) -> b.getImdbRating().compareToIgnoreCase(a.getImdbRating()));
                 break;
             case "name":
-                reviews.sort((a,b) -> b.getTitle().compareToIgnoreCase(a.getTitle()));
+                reviews.sort((a,b) -> a.getTitle().compareToIgnoreCase(b.getTitle()));
                 break;
         }
 
