@@ -20,6 +20,9 @@ public class Review {
     private String year;
     private String runtime;
     private String imdbRating;
+    private String metascore;
+    private String imdbVotes;
+    private String type;
 
     public String getTitle() {
         return title;
@@ -32,6 +35,9 @@ public class Review {
                 ", year='" + year + '\'' +
                 ", runtime='" + runtime + '\'' +
                 ", imdbRating='" + imdbRating + '\'' +
+                ", metascore='" + metascore + '\'' +
+                ", imdbVotes='" + imdbVotes + '\'' +
+                ", type='" + type + '\'' +
                 '}';
     }
 
