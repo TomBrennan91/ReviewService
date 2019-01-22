@@ -4,9 +4,9 @@
         <title>Review Aggregator Aggregator</title>
     </head>
     <body>
-        <img src="imdb_logo.jpg" alt="IMDB Logo"><p> Score Aggregator</p>
+        <img src="imdb_logo.jpg" alt="IMDB Logo"><h3> Score Aggregator</h3>
         <form id="form">
-            <textarea name="title" rows="10" cols="100" >A Star is Born
+            <textarea name="title" rows="10" cols="50" >A Star is Born
 The Man in the moon
 Say anything
 Moonstruck
@@ -17,20 +17,24 @@ The Shawshank redemption</textarea>
         </form>
         <br>
         <form action="" id="sorting"> Sort By:
-            <input type="radio" name="sorting" id="rating"> Rating
-            <input type="radio" name="sorting" id="name"> Name
-            <input type="radio" name="sorting" id="year"> Year
-            <input type="radio" name="sorting" id="votes"> IMDB Votes
-            <input type="radio" name="sorting"  id="runtime"> Runtime
+            <input class="sorting" type="radio" name="sorting" id="name"> Name
+            <input class="sorting" type="radio" name="sorting" id="rating"> Rating
+            <input class="sorting" type="radio" name="sorting" id="year"> Year
+            <input class="sorting" type="radio" name="sorting"  id="runtime"> Runtime
+            <input class="sorting" type="radio" name="sorting" id="votes"> IMDB Votes
+            <input class="sorting" type="radio" name="sorting" id="metascore"> MetaScore
+            <input class="sorting" type="radio" name="sorting"  id="type"> Type
         </form>
         <form id ="info" name="info"> Additional Information:
             <input class="info" type="checkbox" id="yearBox" checked> Year
             <input class="info" type="checkbox" id="runtimeBox" checked> Runtime
             <input class="info" type="checkbox" id="imdbVotesBox"> IMDB Votes
+            <input class="info" type="checkbox" id="metascoreBox" checked> MetaScore
+            <input class="info" type="checkbox" id="typeBox"> Type
         </form>
 
         <form id ="filters"> Filter by:<br>
-            <input type="checkbox" id="votesFilterBox"> Votes <br>
+            <input type="checkbox" id="votesFilterBox"> IMDB Votes <br>
             <input type="checkbox" id="yearFilterBox"> Year <br>
             <input type="checkbox" id="runtimeFilterBox"> Runtime
         </form>
@@ -38,7 +42,7 @@ The Shawshank redemption</textarea>
         <button type="button" onclick="postAndUpdate()"> Get IMDB Scores</button>
         <br>
         <br>
-        <textarea id="output" rows="10" cols="100" ></textarea>
+        <!--<textarea id="output" rows="10" cols="100" ></textarea>-->
 
         <table id="outputTable"></table>
 

@@ -60,6 +60,13 @@ public class ReviewController {
             case "runtime":
                 reviews.sort((a,b) -> Integer.parseInt(b.getRuntime().replace(" min", ""))
                                      -Integer.parseInt(a.getRuntime().replace(" min", "")));
+                break;
+            case "metascore":
+                reviews.sort((a,b) -> Integer.parseInt(b.getMetascore())
+                                     -Integer.parseInt(a.getMetascore()));
+                break;
+            case "type":
+                reviews.sort((a,b) -> a.getType().compareToIgnoreCase(b.getType()));
         }
     }
 

@@ -64,7 +64,7 @@ public class Review {
     public String getType() {
         return type;
     }
-    
+
     public static String getHTML(String urlToRead) throws Exception {
         StringBuilder result = new StringBuilder();
         URL url = new URL(urlToRead);
