@@ -1,7 +1,7 @@
 function postAndUpdate(){
     var titles = document.forms["form"].elements[0].value;
     titles = titles.replace(/\n/g,"~");
-    postAjax('http://localhost:8080/review?sort=' + getSortingParameter + getRatingFilter, titles , function (data){updateOutput(data);});
+    postAjax('http://localhost:8080/review?sort=' + getSortingParameter() + getRatingFilter(), titles , function (data){updateOutput(data);});
 }
 
 function postAjax(url, data, success) {
@@ -22,8 +22,7 @@ function postAjax(url, data, success) {
 
 function updateOutput(data){
     getColumnHeaders();
-    console.log(getSortingParameter);
-    console.log(data);
+    console.log(getRatingFilter())
     clearOutputTable();
     printColumnHeaders();
     var responseObj = JSON.parse(data);
@@ -56,10 +55,10 @@ function getSortingParameter(){
 
 function getRatingFilter(){
     if (document.getElementById("ratingFilterBox").checked){
-        var lowerBound = getElementById("ratingLB");
+        var lowerBound = document.getElementById("ratingLB").value;
         if (!empty(lowerBound)) return "&ratingFilter=gt:" + lowerBound;
 
-        var upperBound = getElementById("ratingUB");
+        var upperBound = document.getElementById("ratingUB").value;
         if (!empty(upperBound)) return "&ratingFilter=lt:" + upperBound;
     }
     return ""
@@ -69,7 +68,6 @@ function getColumnHeaders(){
     var columnHeaders = ["title", "imdbRating"];
     var optionalHeaders = document.getElementsByClassName("info");
     for (let item of optionalHeaders){
-        console.log(item);
         if(item.checked){
             columnHeaders.push(item.id.replace("Box",""));
         }
@@ -97,4 +95,23 @@ function clearOutputTable(){
     while(Parent.hasChildNodes()){
        Parent.removeChild(Parent.firstChild);
     }
+}
+
+function empty(data){
+  if(typeof(data) == 'number' || typeof(data) == 'boolean'){
+    return false;
+  }
+  if(typeof(data) == 'undefined' || data === null){
+    return true;
+  }
+  if(typeof(data.length) != 'undefined'){
+    return data.length == 0;
+  }
+  var count = 0;
+  for(var i in data){
+    if(data.hasOwnProperty(i)){
+      count ++;
+    }
+  }
+  return count == 0;
 }

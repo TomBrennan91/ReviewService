@@ -15,8 +15,9 @@ public class ReviewController {
     public ArrayList<Review> reviews(@RequestBody String input,
                                      @RequestParam(value = "sort", defaultValue = "") String sorting,
                                      @RequestParam(value = "ratingFilter", defaultValue = "") String ratingFilter){
-        System.out.println("request: " + counter.incrementAndGet());
-        System.out.println("sorting = " + sorting);
+        System.out.println("request=" + counter.incrementAndGet());
+        System.out.println("sorting=" + sorting);
+        System.out.println("rating=" + ratingFilter);
         String titles[] = input.split("~");
 
         ArrayList<Review> reviews = new ArrayList<>();
@@ -33,11 +34,10 @@ public class ReviewController {
                 e.printStackTrace();
             }
         }
-        System.out.println(titles.length + " -> " + reviews.size());
         sortReviews(reviews, sorting);
-        reviews.forEach(System.out::println);
+        //reviews.forEach(System.out::println);
         filterReviews(reviews, ratingFilter);
-
+        System.out.println(titles.length + " -> " + reviews.size());
         return reviews;
     }
 
@@ -78,10 +78,10 @@ public class ReviewController {
         if (!ratingFilter.equalsIgnoreCase("")){
             String[] splitFilter = ratingFilter.split(":");
             if (splitFilter.length < 2 ) return;
-            if (splitFilter[0].equalsIgnoreCase("lt")){
+            if (splitFilter[0].equalsIgnoreCase("gt")){
                 reviews.removeIf(review -> Integer.parseInt(review.getImdbRating().replace(".","")) < Integer.parseInt(splitFilter[1].replace(".","")));
             }
-            if (splitFilter[0].equalsIgnoreCase("gt")){
+            if (splitFilter[0].equalsIgnoreCase("lt")){
                 reviews.removeIf(review -> Integer.parseInt(review.getImdbRating().replace(".","")) > Integer.parseInt(splitFilter[1].replace(".","")));
             }
         }
