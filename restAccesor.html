@@ -34,9 +34,12 @@ The Shawshank redemption</textarea>
         </form>
 
         <form id ="filters"> Filter by:<br>
-            <input type="checkbox" id="votesFilterBox"> IMDB Votes <br>
-            <input type="checkbox" id="yearFilterBox"> Year <br>
-            <input type="checkbox" id="runtimeFilterBox"> Runtime
+            <input type="checkbox" id="votesFilterBox"> IMDB Votes<br>
+            from:<input type="text" id="votesLB"> to:<input type="text" id="votesUB"><br>
+            <input type="checkbox" id="yearFilterBox"> Year<br>
+            from:<input type="text" id="yearLB"> to:<input type="text" id="yearUB"><br>
+            <input type="checkbox" id="runtimeFilterBox"> Runtime<br>
+            from:<input type="text" id="runtimeLB"> to:<input type="text" id="runtimeUB"><br>
         </form>
         <br>
         <button type="button" onclick="postAndUpdate()"> Get IMDB Scores</button>
