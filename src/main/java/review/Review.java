@@ -23,6 +23,8 @@ public class Review {
     private String metascore;
     private String imdbVotes;
     private String type;
+    private String genre;
+    private String plot;
 
     @Override
     public String toString() {
@@ -34,7 +36,17 @@ public class Review {
                 ", metascore='" + metascore + '\'' +
                 ", imdbVotes='" + imdbVotes + '\'' +
                 ", type='" + type + '\'' +
+                ", genre='" + genre + '\'' +
+                ", plot='" + plot + '\'' +
                 '}';
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public String getPlot() {
+        return plot;
     }
 
     public String getTitle() {
