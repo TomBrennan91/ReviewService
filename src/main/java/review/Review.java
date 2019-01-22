@@ -26,8 +26,7 @@ public class Review {
 
     @Override
     public String toString() {
-        return "Review{" +
-                "title='" + title + '\'' +
+        return  "" + title + "{" +
                 ", year='" + year + '\'' +
                 ", runtime='" + runtime + '\'' +
                 ", imdbRating='" + imdbRating + '\'' +

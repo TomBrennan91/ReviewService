@@ -47,8 +47,8 @@ public class ReviewController {
                                     - Integer.parseInt(a.getYear()));
                 break;
             case "rating":
-                reviews.sort((a,b) -> Integer.parseInt(b.getImdbRating().replace(".",""))
-                                    - Integer.parseInt(a.getImdbRating().replace(".","")));
+                reviews.sort((a,b) -> Integer.parseInt(b.getImdbRating().replace(".","").replace("N/A","0"))
+                                    - Integer.parseInt(a.getImdbRating().replace(".","").replace("N/A","0")));
                 break;
             case "name":
                 reviews.sort((a,b) -> a.getTitle().compareToIgnoreCase(b.getTitle()));
