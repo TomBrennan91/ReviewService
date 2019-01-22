@@ -32,29 +32,31 @@ public class ReviewController {
                 e.printStackTrace();
             }
         }
-
         System.out.println(titles.length + " -> " + reviews.size());
+        sortReviews(reviews, sorting);
+        reviews.forEach(System.out::println);
+        return reviews;
+    }
+
+    private void sortReviews( ArrayList<Review> reviews, String sorting){
         switch (sorting){
             case "":
                 break;
             case "year":
-                reviews.sort((a,b) -> b.getYear().compareToIgnoreCase(a.getYear()));
+                reviews.sort((a,b) -> Integer.parseInt(b.getYear()) - Integer.parseInt(a.getYear()));
                 break;
-            case "score":
-                reviews.sort((a,b) -> b.getImdbRating().compareToIgnoreCase(a.getImdbRating()));
+            case "rating":
+                reviews.sort((a,b) -> Integer.parseInt(b.getImdbRating().replace(".","")) - Integer.parseInt(a.getImdbRating().replace(".","")));
                 break;
             case "name":
                 reviews.sort((a,b) -> a.getTitle().compareToIgnoreCase(b.getTitle()));
                 break;
             case "votes":
-                reviews.sort((a,b) -> b.getImdbVotes().compareToIgnoreCase(a.getImdbVotes()));
+                reviews.sort((a,b) -> Integer.parseInt(b.getImdbVotes().replace(",", "")) -Integer.parseInt(a.getImdbVotes().replace(",", "")));
                 break;
             case "runtime":
-                reviews.sort((a,b) -> a.getRuntime().compareToIgnoreCase(b.getRuntime()));
+                reviews.sort((a,b) -> Integer.parseInt(b.getRuntime().replace(" min", "")) -Integer.parseInt(a.getRuntime().replace(" min", "")));
         }
-
-        reviews.forEach(System.out::println);
-        return reviews;
     }
 
 }

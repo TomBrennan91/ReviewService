@@ -24,10 +24,6 @@ public class Review {
     private String imdbVotes;
     private String type;
 
-    public String getTitle() {
-        return title;
-    }
-
     @Override
     public String toString() {
         return "Review{" +
@@ -41,7 +37,9 @@ public class Review {
                 '}';
     }
 
-
+    public String getTitle() {
+        return title;
+    }
 
     public String getYear() {
         return year;
