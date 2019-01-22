@@ -46,12 +46,10 @@ public class ReviewController {
             case "":
                 break;
             case "year":
-                reviews.sort((a,b) -> Integer.parseInt(b.getYear().replace("–",""))
-                                    - Integer.parseInt(a.getYear().replace("–","")));
+                reviews.sort((a,b) -> b.safeGetYear() - a.safeGetYear());
                 break;
             case "rating":
-                reviews.sort((a,b) -> Integer.parseInt(b.getImdbRating().replace(".","").replace("N/A","0"))
-                                    - Integer.parseInt(a.getImdbRating().replace(".","").replace("N/A","0")));
+                reviews.sort((a,b) -> b.safeGetImdbRating() - a.safeGetImdbRating());
                 break;
             case "name":
                 reviews.sort((a,b) -> a.getTitle().compareToIgnoreCase(b.getTitle()));
@@ -79,10 +77,10 @@ public class ReviewController {
             String[] splitFilter = ratingFilter.split(":");
             if (splitFilter.length < 2 ) return;
             if (splitFilter[0].equalsIgnoreCase("gt")){
-                reviews.removeIf(review -> Integer.parseInt(review.getImdbRating().replace(".","")) < Integer.parseInt(splitFilter[1].replace(".","")));
+                reviews.removeIf(review -> review.safeGetImdbRating() < Integer.parseInt(splitFilter[1].replace(".","")));
             }
             if (splitFilter[0].equalsIgnoreCase("lt")){
-                reviews.removeIf(review -> Integer.parseInt(review.getImdbRating().replace(".","")) > Integer.parseInt(splitFilter[1].replace(".","")));
+                reviews.removeIf(review -> review.safeGetImdbRating() > Integer.parseInt(splitFilter[1].replace(".","")));
             }
         }
     }

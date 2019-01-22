@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.Comparator;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Review {
@@ -54,12 +53,21 @@ public class Review {
         return year;
     }
 
+    public int safeGetYear() {
+        String[] splitYear = year.split("–");
+        return Integer.parseInt(splitYear[0]);
+    }
+
     public String getRuntime() {
         return runtime;
     }
 
     public String getImdbRating() {
         return imdbRating;
+    }
+
+    public int safeGetImdbRating() {
+        return Integer.parseInt(imdbRating.replace(".","").replace("N/A",""));
     }
 
     public String getImdbVotes() {
