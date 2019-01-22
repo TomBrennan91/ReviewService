@@ -43,19 +43,23 @@ public class ReviewController {
             case "":
                 break;
             case "year":
-                reviews.sort((a,b) -> Integer.parseInt(b.getYear()) - Integer.parseInt(a.getYear()));
+                reviews.sort((a,b) -> Integer.parseInt(b.getYear())
+                                    - Integer.parseInt(a.getYear()));
                 break;
             case "rating":
-                reviews.sort((a,b) -> Integer.parseInt(b.getImdbRating().replace(".","")) - Integer.parseInt(a.getImdbRating().replace(".","")));
+                reviews.sort((a,b) -> Integer.parseInt(b.getImdbRating().replace(".",""))
+                                    - Integer.parseInt(a.getImdbRating().replace(".","")));
                 break;
             case "name":
                 reviews.sort((a,b) -> a.getTitle().compareToIgnoreCase(b.getTitle()));
                 break;
             case "votes":
-                reviews.sort((a,b) -> Integer.parseInt(b.getImdbVotes().replace(",", "")) -Integer.parseInt(a.getImdbVotes().replace(",", "")));
+                reviews.sort((a,b) -> Integer.parseInt(b.getImdbVotes().replace(",", ""))
+                                     -Integer.parseInt(a.getImdbVotes().replace(",", "")));
                 break;
             case "runtime":
-                reviews.sort((a,b) -> Integer.parseInt(b.getRuntime().replace(" min", "")) -Integer.parseInt(a.getRuntime().replace(" min", "")));
+                reviews.sort((a,b) -> Integer.parseInt(b.getRuntime().replace(" min", ""))
+                                     -Integer.parseInt(a.getRuntime().replace(" min", "")));
         }
     }
 

@@ -78,17 +78,4 @@ public class Review {
         return objectMapper.readValue(jsonReview, Review.class);
     }
 
-    class ReviewScoreComparator implements Comparator<Review>{
-        @Override
-        public int compare(Review a, Review b){
-            Double scoreA = Double.parseDouble(a.getImdbRating());
-            Double scoreB = Double.parseDouble(b.getImdbRating());
-            if((scoreA - scoreB) > 0){
-                return -1;
-            } else {
-                return 1;
-            }
-        }
-    }
-
 }
