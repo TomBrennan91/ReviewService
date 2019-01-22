@@ -12,11 +12,12 @@ public class ReviewController {
 
     @CrossOrigin
     @PostMapping("/review")
-    public ArrayList<Review> reviews(@RequestBody String input, @RequestParam(value = "sort", defaultValue = "")String sorting){
+    public ArrayList<Review> reviews(@RequestBody String input,
+                                     @RequestParam(value = "sort", defaultValue = "") String sorting,
+                                     @RequestParam(value = "ratingFilter", defaultValue = "") String ratingFilter){
         System.out.println("request: " + counter.incrementAndGet());
         System.out.println("sorting = " + sorting);
         String titles[] = input.split("~");
-        System.out.println(titles[titles.length -1]);
 
         ArrayList<Review> reviews = new ArrayList<>();
 
@@ -35,6 +36,8 @@ public class ReviewController {
         System.out.println(titles.length + " -> " + reviews.size());
         sortReviews(reviews, sorting);
         reviews.forEach(System.out::println);
+        filterReviews(reviews, ratingFilter);
+
         return reviews;
     }
 
@@ -43,8 +46,8 @@ public class ReviewController {
             case "":
                 break;
             case "year":
-                reviews.sort((a,b) -> Integer.parseInt(b.getYear())
-                                    - Integer.parseInt(a.getYear()));
+                reviews.sort((a,b) -> Integer.parseInt(b.getYear().replace("–",""))
+                                    - Integer.parseInt(a.getYear().replace("–","")));
                 break;
             case "rating":
                 reviews.sort((a,b) -> Integer.parseInt(b.getImdbRating().replace(".","").replace("N/A","0"))
@@ -54,12 +57,12 @@ public class ReviewController {
                 reviews.sort((a,b) -> a.getTitle().compareToIgnoreCase(b.getTitle()));
                 break;
             case "votes":
-                reviews.sort((a,b) -> Integer.parseInt(b.getImdbVotes().replace(",", ""))
-                                     -Integer.parseInt(a.getImdbVotes().replace(",", "")));
+                reviews.sort((a,b) -> Integer.parseInt(b.getImdbVotes().replace(",", "").replace("N/A","0"))
+                                     -Integer.parseInt(a.getImdbVotes().replace(",", "").replace("N/A","0")));
                 break;
             case "runtime":
-                reviews.sort((a,b) -> Integer.parseInt(b.getRuntime().replace(" min", ""))
-                                     -Integer.parseInt(a.getRuntime().replace(" min", "")));
+                reviews.sort((a,b) -> Integer.parseInt(b.getRuntime().replace(" min", "").replace("N/A","0"))
+                                     -Integer.parseInt(a.getRuntime().replace(" min", "").replace("N/A","0")));
                 break;
             case "metascore":
                 reviews.sort((a,b) -> Integer.parseInt(b.getMetascore().replace("N/A","0"))
@@ -67,6 +70,17 @@ public class ReviewController {
                 break;
             case "type":
                 reviews.sort((a,b) -> a.getType().compareToIgnoreCase(b.getType()));
+        }
+    }
+
+
+    private void filterReviews(ArrayList<Review> reviews, String ratingFilter){
+        if (!ratingFilter.equalsIgnoreCase("")){
+            String[] splitFilter = ratingFilter.split(":");
+            if (splitFilter.length < 2 ) return;
+            if (splitFilter[0].equalsIgnoreCase("<")){
+                reviews.removeIf(review -> Integer.parseInt(review.getImdbRating().replace(".","")) < Integer.parseInt(splitFilter[1].replace(".","")));
+            }
         }
     }
 

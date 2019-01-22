@@ -1,8 +1,7 @@
 function postAndUpdate(){
-    var sortingParameter = getSortingParameter();
     var titles = document.forms["form"].elements[0].value;
     titles = titles.replace(/\n/g,"~");
-    postAjax('http://localhost:8080/review?sort=' + sortingParameter, titles , function (data){updateOutput(data);});
+    postAjax('http://localhost:8080/review?sort=' + getSortingParameter + getRatingFilter, titles , function (data){updateOutput(data);});
 }
 
 function postAjax(url, data, success) {
@@ -25,12 +24,10 @@ function updateOutput(data){
     getColumnHeaders();
     console.log(getSortingParameter);
     console.log(data);
-    var responseObj = JSON.parse(data);
-    //var outputTable = document.getElementById("outputTable");
     clearOutputTable();
     printColumnHeaders();
+    var responseObj = JSON.parse(data);
     var columnHeaders = getColumnHeaders();
-
     for (var i = 0 ; i < responseObj.length  ; i++){
         var row = outputTable.insertRow(i + 1);
         for (columnIdx in columnHeaders){
@@ -57,6 +54,17 @@ function getSortingParameter(){
     return "";
 }
 
+function getRatingFilter(){
+    if (document.getElementById("ratingFilterBox").checked){
+        var lowerBound = getElementById("ratingLB");
+        if (!empty(lowerBound)) return "&ratingFilter=>:" + lowerBound;
+
+        var upperBound = getElementById("ratingUB");
+        if (!empty(upperBound)) return "&ratingFilter=<:" + upperBound;
+    }
+    return ""
+}
+
 function getColumnHeaders(){
     var columnHeaders = ["title", "imdbRating"];
     var optionalHeaders = document.getElementsByClassName("info");
@@ -66,7 +74,6 @@ function getColumnHeaders(){
             columnHeaders.push(item.id.replace("Box",""));
         }
     }
-    console.log(columnHeaders);
     return columnHeaders;
 }
 

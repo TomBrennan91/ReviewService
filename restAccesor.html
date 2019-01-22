@@ -33,7 +33,7 @@ The Shawshank redemption</textarea>
         </form>
         <form action="" id="sorting"> Sort By:
             <input class="sorting" type="radio" name="sorting" id="name"> Name
-            <input class="sorting" type="radio" name="sorting" id="rating"> Rating
+            <input class="sorting" type="radio" name="sorting" id="rating"> IMDB Rating
             <input class="sorting" type="radio" name="sorting" id="year"> Year
             <input class="sorting" type="radio" name="sorting" id="runtime"> Runtime
             <input class="sorting" type="radio" name="sorting" id="votes"> IMDB Votes
@@ -41,6 +41,8 @@ The Shawshank redemption</textarea>
             <input class="sorting" type="radio" name="sorting" id="type"> Type
         </form>
         <form id ="filters"> Filter by:<br>
+            <input type="checkbox" id="ratingFilterBox"> IMDB Rating<br>
+            from:<input type="text" id="ratingLB"> to:<input type="text" id="ratingUB"><br>
             <input type="checkbox" id="votesFilterBox"> IMDB Votes<br>
             from:<input type="text" id="votesLB"> to:<input type="text" id="votesUB"><br>
             <input type="checkbox" id="yearFilterBox"> Year<br>
