@@ -26,7 +26,8 @@ function updateOutput(data){
     console.log(getSortingParameter);
     console.log(data);
     var responseObj = JSON.parse(data);
-    var outputTable = document.getElementById("outputTable");
+    //var outputTable = document.getElementById("outputTable");
+    clearOutputTable();
     printColumnHeaders();
     var columnHeaders = getColumnHeaders();
 
@@ -82,4 +83,11 @@ function printColumnHeaders(){
 
 function upperFirstLetter(string){
     return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function clearOutputTable(){
+    var Parent = document.getElementById("outputTable");
+    while(Parent.hasChildNodes()){
+       Parent.removeChild(Parent.firstChild);
+    }
 }

@@ -2,6 +2,12 @@
 <html>
     <head>
         <title>Review Aggregator Aggregator</title>
+        <style>
+            table, th, td {
+              border: 1px solid black;
+              border-collapse: collapse;
+            }
+        </style>
     </head>
     <body>
         <img src="imdb_logo.jpg" alt="IMDB Logo"><h3> Score Aggregator</h3>
@@ -22,8 +28,8 @@ The Shawshank redemption</textarea>
             <input class="info" type="checkbox" id="imdbVotesBox" checked> IMDB Votes
             <input class="info" type="checkbox" id="metascoreBox" checked> MetaScore
             <input class="info" type="checkbox" id="typeBox" checked> Type
-            <input class="info" type="checkbox" id="genreBox" checked> Genre
-            <input class="info" type="checkbox" id="plotBox" checked> Plot
+            <input class="info" type="checkbox" id="genreBox"> Genre
+            <input class="info" type="checkbox" id="plotBox"> Plot
         </form>
         <form action="" id="sorting"> Sort By:
             <input class="sorting" type="radio" name="sorting" id="name"> Name
@@ -33,8 +39,6 @@ The Shawshank redemption</textarea>
             <input class="sorting" type="radio" name="sorting" id="votes"> IMDB Votes
             <input class="sorting" type="radio" name="sorting" id="metascore"> MetaScore
             <input class="sorting" type="radio" name="sorting" id="type"> Type
-            <input class="sorting" type="radio" name="sorting" id="genre"> Genre
-            <input class="sorting" type="radio" name="sorting" id="plot"> Plot
         </form>
         <form id ="filters"> Filter by:<br>
             <input type="checkbox" id="votesFilterBox"> IMDB Votes<br>
