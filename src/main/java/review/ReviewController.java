@@ -78,8 +78,11 @@ public class ReviewController {
         if (!ratingFilter.equalsIgnoreCase("")){
             String[] splitFilter = ratingFilter.split(":");
             if (splitFilter.length < 2 ) return;
-            if (splitFilter[0].equalsIgnoreCase("<")){
+            if (splitFilter[0].equalsIgnoreCase("lt")){
                 reviews.removeIf(review -> Integer.parseInt(review.getImdbRating().replace(".","")) < Integer.parseInt(splitFilter[1].replace(".","")));
+            }
+            if (splitFilter[0].equalsIgnoreCase("gt")){
+                reviews.removeIf(review -> Integer.parseInt(review.getImdbRating().replace(".","")) > Integer.parseInt(splitFilter[1].replace(".","")));
             }
         }
     }

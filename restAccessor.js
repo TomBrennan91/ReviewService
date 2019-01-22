@@ -57,10 +57,10 @@ function getSortingParameter(){
 function getRatingFilter(){
     if (document.getElementById("ratingFilterBox").checked){
         var lowerBound = getElementById("ratingLB");
-        if (!empty(lowerBound)) return "&ratingFilter=>:" + lowerBound;
+        if (!empty(lowerBound)) return "&ratingFilter=gt:" + lowerBound;
 
         var upperBound = getElementById("ratingUB");
-        if (!empty(upperBound)) return "&ratingFilter=<:" + upperBound;
+        if (!empty(upperBound)) return "&ratingFilter=lt:" + upperBound;
     }
     return ""
 }
