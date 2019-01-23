@@ -17,9 +17,8 @@ public class ReviewController {
                                      @RequestParam(value = "ratingFilter", defaultValue = "") String ratingFilter,
                                      @RequestParam(value = "yearFilter", defaultValue = "") String yearFilter,
                                      @RequestParam(value = "voteFilter", defaultValue = "") String voteFilter){
-        System.out.println("request=" + counter.incrementAndGet());
-        System.out.println("sorting=" + sorting);
-        System.out.println("rating=" + ratingFilter);
+        System.out.println("request# " + counter.incrementAndGet());
+        System.out.println("sorting=" + sorting + ",rating=" + ratingFilter + ",year=" + yearFilter  + ",votes=" + voteFilter);
         String titles[] = input.split("~");
 
         ArrayList<Review> reviews = new ArrayList<>();
@@ -37,10 +36,11 @@ public class ReviewController {
             }
         }
         sortReviews(reviews, sorting);
-        //reviews.forEach(System.out::println);
+
         filterReviews(reviews, ratingFilter);
         filterYear(reviews, yearFilter);
         filterVotes(reviews, voteFilter);
+
         System.out.println(titles.length + " -> " + reviews.size());
         return reviews;
     }
