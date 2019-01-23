@@ -54,8 +54,7 @@ public class Review {
     }
 
     public Integer safeGetYear() {
-        String[] splitYear = year.split("–");
-        return Integer.parseInt(splitYear[0]);
+        return Integer.parseInt(year.split("–")[0]);
     }
 
     public String getRuntime() {

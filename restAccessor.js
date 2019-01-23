@@ -1,7 +1,7 @@
 function postAndUpdate(){
     var titles = document.forms["form"].elements[0].value;
     titles = titles.replace(/\n/g,"~");
-    postAjax('http://localhost:8080/review?sort=' + getSortingParameter() + getRatingFilter(), titles , function (data){updateOutput(data);});
+    postAjax('http://localhost:8080/review?sort=' + getSortingParameter() + getRatingFilter() + getVoteFilter() + getRuntimeFilter() + getYearFilter(), titles , function (data){updateOutput(data);});
 }
 
 function postAjax(url, data, success) {
@@ -57,9 +57,38 @@ function getRatingFilter(){
     if (document.getElementById("ratingFilterBox").checked){
         var lowerBound = document.getElementById("ratingLB").value;
         if (!empty(lowerBound)) return "&ratingFilter=gt:" + lowerBound;
-
         var upperBound = document.getElementById("ratingUB").value;
         if (!empty(upperBound)) return "&ratingFilter=lt:" + upperBound;
+    }
+    return ""
+}
+
+function getVoteFilter(){
+    if (document.getElementById("votesFilterBox").checked){
+        var lowerBound = document.getElementById("votesLB").value;
+        if (!empty(lowerBound)) return "&votesFilter=gt:" + lowerBound;
+        var upperBound = document.getElementById("votesUB").value;
+        if (!empty(upperBound)) return "&votesFilter=lt:" + upperBound;
+    }
+    return ""
+}
+
+function getRuntimeFilter(){
+    if (document.getElementById("runtimeFilterBox").checked){
+        var lowerBound = document.getElementById("runtimeLB").value;
+        if (!empty(lowerBound)) return "&runtimeFilter=gt:" + lowerBound;
+        var upperBound = document.getElementById("runtimeUB").value;
+        if (!empty(upperBound)) return "&runtimeFilter=lt:" + upperBound;
+    }
+    return ""
+}
+
+function getYearFilter(){
+    if (document.getElementById("yearFilterBox").checked){
+        var lowerBound = document.getElementById("yearLB").value;
+        if (!empty(lowerBound)) return "&yearFilter=gt:" + lowerBound;
+        var upperBound = document.getElementById("yearUB").value;
+        if (!empty(upperBound)) return "&yearFilter=lt:" + upperBound;
     }
     return ""
 }
@@ -98,20 +127,20 @@ function clearOutputTable(){
 }
 
 function empty(data){
-  if(typeof(data) == 'number' || typeof(data) == 'boolean'){
-    return false;
-  }
-  if(typeof(data) == 'undefined' || data === null){
-    return true;
-  }
-  if(typeof(data.length) != 'undefined'){
-    return data.length == 0;
-  }
-  var count = 0;
-  for(var i in data){
-    if(data.hasOwnProperty(i)){
-      count ++;
+    if(typeof(data) == 'number' || typeof(data) == 'boolean'){
+        return false;
     }
-  }
-  return count == 0;
+    if(typeof(data) == 'undefined' || data === null){
+        return true;
+    }
+    if(typeof(data.length) != 'undefined'){
+        return data.length == 0;
+    }
+    var count = 0;
+    for(var i in data){
+        if(data.hasOwnProperty(i)){
+            count ++;
+        }
+    }
+    return count == 0;
 }

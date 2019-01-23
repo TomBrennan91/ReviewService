@@ -16,9 +16,10 @@ public class ReviewController {
                                      @RequestParam(value = "sort", defaultValue = "") String sorting,
                                      @RequestParam(value = "ratingFilter", defaultValue = "") String ratingFilter,
                                      @RequestParam(value = "yearFilter", defaultValue = "") String yearFilter,
-                                     @RequestParam(value = "voteFilter", defaultValue = "") String voteFilter){
+                                     @RequestParam(value = "votesFilter", defaultValue = "") String voteFilter,
+                                     @RequestParam(value = "runtimeFilter", defaultValue = "") String runtimeFilter){
         System.out.println("request# " + counter.incrementAndGet());
-        System.out.println("sorting=" + sorting + ",rating=" + ratingFilter + ",year=" + yearFilter  + ",votes=" + voteFilter);
+        System.out.println("sorting=" + sorting + ",rating=" + ratingFilter + ",year=" + yearFilter  + ",votes=" + voteFilter+ ",runtime=" + runtimeFilter);
         String titles[] = input.split("~");
 
         ArrayList<Review> reviews = new ArrayList<>();
@@ -40,6 +41,7 @@ public class ReviewController {
         filterReviews(reviews, ratingFilter);
         filterYear(reviews, yearFilter);
         filterVotes(reviews, voteFilter);
+        filterRuntime(reviews, runtimeFilter);
 
         System.out.println(titles.length + " -> " + reviews.size());
         return reviews;
@@ -98,6 +100,7 @@ public class ReviewController {
             }
         }
     }
+
     private void filterVotes(ArrayList<Review> reviews, String voteFilter){
         if (!voteFilter.equalsIgnoreCase("")){
             String[] splitFilter = voteFilter.split(":");
@@ -107,6 +110,19 @@ public class ReviewController {
             }
             if (splitFilter[0].equalsIgnoreCase("lt")){
                 reviews.removeIf(review -> review.safeGetImdbVotes() > Integer.parseInt(splitFilter[1].replace(",","").replace("N/A","")));
+            }
+        }
+    }
+
+    private void filterRuntime(ArrayList<Review> reviews, String runtimeFilter){
+        if (!runtimeFilter.equalsIgnoreCase("")){
+            String[] splitFilter = runtimeFilter.split(":");
+            if (splitFilter.length < 2 ) return;
+            if (splitFilter[0].equalsIgnoreCase("gt")){
+                reviews.removeIf(review -> review.safeGetRuntime() < Integer.parseInt(splitFilter[1].replace(",","").replace("N/A","")));
+            }
+            if (splitFilter[0].equalsIgnoreCase("lt")){
+                reviews.removeIf(review -> review.safeGetRuntime() > Integer.parseInt(splitFilter[1].replace(",","").replace("N/A","")));
             }
         }
     }
