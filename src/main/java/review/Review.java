@@ -53,7 +53,7 @@ public class Review {
         return year;
     }
 
-    public int safeGetYear() {
+    public Integer safeGetYear() {
         String[] splitYear = year.split("–");
         return Integer.parseInt(splitYear[0]);
     }
@@ -62,11 +62,15 @@ public class Review {
         return runtime;
     }
 
+    public Integer safeGetRuntime() {
+        return Integer.parseInt(runtime.replace(" min", "").replace("N/A","0"));
+    }
+
     public String getImdbRating() {
         return imdbRating;
     }
 
-    public int safeGetImdbRating() {
+    public Integer safeGetImdbRating() {
         return Integer.parseInt(imdbRating.replace(".","").replace("N/A",""));
     }
 
@@ -74,8 +78,16 @@ public class Review {
         return imdbVotes;
     }
 
+    public Integer safeGetImdbVotes() {
+        return Integer.parseInt(imdbVotes.replace(",","").replace("N/A",""));
+    }
+
     public String getMetascore() {
         return metascore;
+    }
+
+    public Integer safeGetMetascore() {
+        return Integer.parseInt(metascore.replace("N/A","0"));
     }
 
     public String getType() {

@@ -55,16 +55,13 @@ public class ReviewController {
                 reviews.sort((a,b) -> a.getTitle().compareToIgnoreCase(b.getTitle()));
                 break;
             case "votes":
-                reviews.sort((a,b) -> Integer.parseInt(b.getImdbVotes().replace(",", "").replace("N/A","0"))
-                                     -Integer.parseInt(a.getImdbVotes().replace(",", "").replace("N/A","0")));
+                reviews.sort((a,b) -> b.safeGetImdbVotes() - a.safeGetImdbVotes());
                 break;
             case "runtime":
-                reviews.sort((a,b) -> Integer.parseInt(b.getRuntime().replace(" min", "").replace("N/A","0"))
-                                     -Integer.parseInt(a.getRuntime().replace(" min", "").replace("N/A","0")));
+                reviews.sort((a,b) -> b.safeGetRuntime() - a.safeGetRuntime());
                 break;
             case "metascore":
-                reviews.sort((a,b) -> Integer.parseInt(b.getMetascore().replace("N/A","0"))
-                                     -Integer.parseInt(a.getMetascore().replace("N/A","0")));
+                reviews.sort((a,b) -> b.safeGetMetascore() - a.safeGetMetascore());
                 break;
             case "type":
                 reviews.sort((a,b) -> a.getType().compareToIgnoreCase(b.getType()));
