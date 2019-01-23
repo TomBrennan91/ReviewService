@@ -14,7 +14,9 @@ public class ReviewController {
     @PostMapping("/review")
     public ArrayList<Review> reviews(@RequestBody String input,
                                      @RequestParam(value = "sort", defaultValue = "") String sorting,
-                                     @RequestParam(value = "ratingFilter", defaultValue = "") String ratingFilter){
+                                     @RequestParam(value = "ratingFilter", defaultValue = "") String ratingFilter,
+                                     @RequestParam(value = "yearFilter", defaultValue = "") String yearFilter,
+                                     @RequestParam(value = "voteFilter", defaultValue = "") String voteFilter){
         System.out.println("request=" + counter.incrementAndGet());
         System.out.println("sorting=" + sorting);
         System.out.println("rating=" + ratingFilter);
@@ -37,6 +39,8 @@ public class ReviewController {
         sortReviews(reviews, sorting);
         //reviews.forEach(System.out::println);
         filterReviews(reviews, ratingFilter);
+        filterYear(reviews, yearFilter);
+        filterVotes(reviews, voteFilter);
         System.out.println(titles.length + " -> " + reviews.size());
         return reviews;
     }
@@ -82,5 +86,29 @@ public class ReviewController {
         }
     }
 
+    private void filterYear(ArrayList<Review> reviews, String yearFilter){
+        if (!yearFilter.equalsIgnoreCase("")){
+            String[] splitFilter = yearFilter.split(":");
+            if (splitFilter.length < 2 ) return;
+            if (splitFilter[0].equalsIgnoreCase("gt")){
+                reviews.removeIf(review -> review.safeGetYear() < Integer.parseInt(splitFilter[1]));
+            }
+            if (splitFilter[0].equalsIgnoreCase("lt")){
+                reviews.removeIf(review -> review.safeGetYear() > Integer.parseInt(splitFilter[1]));
+            }
+        }
+    }
+    private void filterVotes(ArrayList<Review> reviews, String voteFilter){
+        if (!voteFilter.equalsIgnoreCase("")){
+            String[] splitFilter = voteFilter.split(":");
+            if (splitFilter.length < 2 ) return;
+            if (splitFilter[0].equalsIgnoreCase("gt")){
+                reviews.removeIf(review -> review.safeGetImdbVotes() < Integer.parseInt(splitFilter[1].replace(",","").replace("N/A","")));
+            }
+            if (splitFilter[0].equalsIgnoreCase("lt")){
+                reviews.removeIf(review -> review.safeGetImdbVotes() > Integer.parseInt(splitFilter[1].replace(",","").replace("N/A","")));
+            }
+        }
+    }
 }
 
