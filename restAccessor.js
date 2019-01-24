@@ -144,3 +144,30 @@ function empty(data){
     }
     return count == 0;
 }
+
+function toggleRatingFilter(){
+    toggleFilter("rating");
+}
+
+function toggleYearFilter(){
+    toggleFilter("year");
+}
+
+function toggleRuntimeFilter(){
+    toggleFilter("runtime");
+}
+
+function toggleVotesFilter(){
+    toggleFilter("votes");
+}
+
+function toggleFilter(filterName){
+    var x = document.getElementById(filterName + "Filters");
+    if (document.getElementById(filterName + "FilterBox").checked) x.style.display = "block";
+    else x.style.display = "none";
+}
+
+toggleRatingFilter();
+toggleVotesFilter();
+toggleRuntimeFilter();
+toggleYearFilter();
