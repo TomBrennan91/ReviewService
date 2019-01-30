@@ -1,7 +1,5 @@
 package review;
 
-
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,7 +9,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.Comparator;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Review {
@@ -23,43 +20,80 @@ public class Review {
     private String metascore;
     private String imdbVotes;
     private String type;
-
-    public String getTitle() {
-        return title;
-    }
+    private String genre;
+    private String plot;
 
     @Override
     public String toString() {
-        return "Review{" +
-                "title='" + title + '\'' +
+        return  "" + title + "{" +
                 ", year='" + year + '\'' +
                 ", runtime='" + runtime + '\'' +
                 ", imdbRating='" + imdbRating + '\'' +
                 ", metascore='" + metascore + '\'' +
                 ", imdbVotes='" + imdbVotes + '\'' +
                 ", type='" + type + '\'' +
+                ", genre='" + genre + '\'' +
+                ", plot='" + plot + '\'' +
                 '}';
     }
 
+    public String getGenre() {
+        return genre;
+    }
 
+    public String getPlot() {
+        return plot;
+    }
+
+    public String getTitle() {
+        return title;
+    }
 
     public String getYear() {
         return year;
+    }
+
+    public Integer safeGetYear() {
+        return Integer.parseInt(year.split("–")[0]);
     }
 
     public String getRuntime() {
         return runtime;
     }
 
+    public Integer safeGetRuntime() {
+        return Integer.parseInt(runtime.replace(" min", "").replace("N/A","0"));
+    }
+
     public String getImdbRating() {
         return imdbRating;
+    }
+
+    public Integer safeGetImdbRating() {
+        return Integer.parseInt(imdbRating.replace(".","").replace("N/A",""));
     }
 
     public String getImdbVotes() {
         return imdbVotes;
     }
 
-    public static String getHTML(String urlToRead) throws Exception {
+    public Integer safeGetImdbVotes() {
+        return Integer.parseInt(imdbVotes.replace(",","").replace("N/A",""));
+    }
+
+    public String getMetascore() {
+        return metascore;
+    }
+
+    public Integer safeGetMetascore() {
+        return Integer.parseInt(metascore.replace("N/A","0"));
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    private static String getHTML(String urlToRead) throws Exception {
         StringBuilder result = new StringBuilder();
         URL url = new URL(urlToRead);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -78,19 +112,6 @@ public class Review {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
         return objectMapper.readValue(jsonReview, Review.class);
-    }
-
-    class ReviewScoreComparator implements Comparator<Review>{
-        @Override
-        public int compare(Review a, Review b){
-            Double scoreA = Double.parseDouble(a.getImdbRating());
-            Double scoreB = Double.parseDouble(b.getImdbRating());
-            if((scoreA - scoreB) > 0){
-                return -1;
-            } else {
-                return 1;
-            }
-        }
     }
 
 }

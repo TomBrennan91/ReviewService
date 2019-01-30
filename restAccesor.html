@@ -2,43 +2,61 @@
 <html>
     <head>
         <title>Review Aggregator Aggregator</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     </head>
     <body>
-        <img src="imdb_logo.jpg" alt="IMDB Logo">
-        <img src="metacritic_logo.jpg" alt="Metacritic Logo">
-        <img src="Rotten_Tomatoes_logo.png" alt="Rotten Tomatoes Logo">
-        <p> Score Aggregator</p>
+        <img src="imdb_logo.jpg" alt="IMDB Logo"><h3> Review Aggregator Aggregator</h3>
         <form id="form">
-            <textarea name="title" rows="10" cols="100" ></textarea>
+            <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Enter Movie<br>or TV series<br> separated by<br>Newline</span>
+            </div>
+            <textarea  class="form-control"   name="title" rows="10" cols="30" >A Star is Born
+The Man in the moon
+Say anything
+Moonstruck
+Who framed Roger Rabbit
+The Spectacular Now
+Parenthood
+The Shawshank redemption</textarea>
+            </div>
         </form>
         <br>
-        <form action="" id="sorting"> Sort By:
-            <input type="radio" name="sorting" id="rating"> Rating
-            <input type="radio" name="sorting" id="name"> Name
-            <input type="radio" name="sorting" id="year"> Year
-            <input type="radio" name="sorting" id="votes"> IMDB Votes
-            <input type="radio" name="sorting"  id="runtime"> Runtime
-        </form>
         <form id ="info" name="info"> Additional Information:
             <input class="info" type="checkbox" id="yearBox" checked> Year
             <input class="info" type="checkbox" id="runtimeBox" checked> Runtime
-            <input class="info" type="checkbox" id="imdbVotesBox"> IMDB Votes
+            <input class="info" type="checkbox" id="imdbVotesBox" checked> IMDB Votes
+            <input class="info" type="checkbox" id="metascoreBox" checked> MetaScore
+            <input class="info" type="checkbox" id="typeBox" checked> Type
+            <input class="info" type="checkbox" id="genreBox"> Genre
+            <input class="info" type="checkbox" id="plotBox"> Plot
         </form>
-
+        <form action="" id="sorting"> Sort By:
+            <input class="sorting" type="radio" name="sorting" id="name"> Name
+            <input class="sorting" type="radio" name="sorting" id="rating"> IMDB Rating
+            <input class="sorting" type="radio" name="sorting" id="year"> Year
+            <input class="sorting" type="radio" name="sorting" id="runtime"> Runtime
+            <input class="sorting" type="radio" name="sorting" id="votes"> IMDB Votes
+            <input class="sorting" type="radio" name="sorting" id="metascore"> MetaScore
+            <input class="sorting" type="radio" name="sorting" id="type"> Type
+        </form>
         <form id ="filters"> Filter by:<br>
-            <input type="checkbox" id="votesFilterBox"> Votes <br>
-            <input type="checkbox" id="yearFilterBox"> Year <br>
-            <input type="checkbox" id="runtimeFilterBox"> Runtime
+            <input type="checkbox" id="ratingFilterBox" onclick="toggleRatingFilter()"> IMDB Rating<br>
+            <div id="ratingFilters">from:<input type="text" id="ratingLB"> to:<input type="text" id="ratingUB"><br></div>
+            <input type="checkbox" id="votesFilterBox" onclick="toggleVotesFilter()"> IMDB Votes<br>
+            <div id="votesFilters">from:<input type="text" id="votesLB"> to:<input type="text" id="votesUB"><br></div>
+            <input type="checkbox" id="yearFilterBox" onclick="toggleYearFilter()"> Year<br>
+            <div id="yearFilters">from:<input type="text" id="yearLB"> to:<input type="text" id="yearUB"><br></div>
+            <input type="checkbox" id="runtimeFilterBox" onclick="toggleRuntimeFilter()"> Runtime<br>
+            <div id="runtimeFilters">from:<input type="text" id="runtimeLB"> to:<input type="text" id="runtimeUB"><br></div>
         </form>
         <br>
-        <button type="button" onclick="postAndUpdate()"> Get IMDB Scores</button>
-        <br>
-        <br>
-        <!--<textarea id="output" rows="10" cols="100" ></textarea>-->
-
+        <button type="button" class="btn btn-primary" onclick="postAndUpdate()"> Get Reviews</button>
+        <br><br>
         <table id="outputTable"></table>
-
-        <script type="text/javascript" src="jquery-3.3.1.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
         <script src="restAccessor.js"></script>
     </body>
 </html>
