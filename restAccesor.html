@@ -6,11 +6,13 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     </head>
     <body>
-        <img src="imdb_logo.jpg" alt="IMDB Logo"><h3> Review Aggregator Aggregator</h3>
+        <img src="imdb_logo.jpg" alt="IMDB Logo">
+        <img src="metacritic_logo.jpg" alt="MetaCritic Logo">
+        <img src="Rotten_Tomatoes_logo.jpg" alt="Rotten Tomatoes Logo"><h3> Review Aggregator Aggregator</h3>
         <form id="form">
             <div class="input-group">
             <div class="input-group-prepend">
-                <span class="input-group-text">Enter Movie<br>or TV series<br> separated by<br>Newline</span>
+                <span class="input-group-text">Enter Movies<br>or TV series<br>separated by<br>Newline</span>
             </div>
             <textarea  class="form-control"   name="title" rows="10" cols="30" >A Star is Born
 The Man in the moon
@@ -26,31 +28,36 @@ The Shawshank redemption</textarea>
 
         <form id="additional info">
             <div class="input-group mb-3">
-
                 <div class="btn-group btn-group-toggle" data-toggle="buttons" id="inputAdditional">
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="inputAdditional">Additional Information</label>
                     </div>
                     <label class="btn btn-outline-primary active">
-                        <input type="checkbox" checked autocomplete="off">Year
+                        <input class="info" type="checkbox" id="yearBox" checked autocomplete="off">
+                        <i class="far fa-calendar-alt"></i> Year
                     </label>
                     <label class="btn btn-outline-primary active">
-                        <input type="checkbox" checked autocomplete="off">Runtime
+                        <input class="info" type="checkbox" id="runtimeBox" checked autocomplete="off">
+                        <i class="far fa-clock"></i> Runtime
                     </label>
                     <label class="btn btn-outline-primary active">
-                        <input type="checkbox" checked autocomplete="off">IMDb Rating
+                        <input class="info" type="checkbox" id="imdbVotesBox" checked autocomplete="off">
+                        <i class="far fa-star"></i> IMDb Votes
                     </label>
                     <label class="btn btn-outline-primary active">
-                        <input type="checkbox" checked autocomplete="off">MetaScore
+                        <input class="info" type="checkbox" id="metascoreBox" checked autocomplete="off">
+                        <i class="far fa-star"></i> MetaScore
                     </label>
                     <label class="btn btn-outline-primary active">
-                        <input type="checkbox" checked autocomplete="off">Type
+                        <input class="info" type="checkbox" id="typeBox" checked autocomplete="off">
+                        <i class="fas fa-film"></i> Type
                     </label>
                     <label class="btn btn-outline-primary">
-                        <input type="checkbox" autocomplete="off">Genre
+                        <input class="info" type="checkbox" id="genreBox" autocomplete="off">Genre
                     </label>
                     <label class="btn btn-outline-primary">
-                        <input type="checkbox" autocomplete="off">Plot
+                        <input class="info" type="checkbox" id="plotBox" autocomplete="off">
+                        <i class="fas fa-book"></i> Plot
                     </label>
                 </div>
             </div>
@@ -62,13 +69,13 @@ The Shawshank redemption</textarea>
             </div>
             <select class="custom-select" id="inputGroupSelect01">
                 <option selected>No Sorting</option>
-                <option value="1">Name</option>
-                <option value="2">IMDB Rating</option>
-                <option value="3">Year</option>
-                <option value="4">Runtime</option>
-                <option value="5">IMDB Votes</option>
-                <option value="6">MetaScore</option>
-                <option value="7">Type</option>
+                <option value="1" class="sorting">Name</option>
+                <option value="2" class="sorting">IMDB Rating</option>
+                <option value="3" class="sorting">Year</option>
+                <option value="4" class="sorting">Runtime</option>
+                <option value="5" class="sorting">IMDB Votes</option>
+                <option value="6" class="sorting">MetaScore</option>
+                <option value="7" class="sorting">Type</option>
             </select>
             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                 <label class="btn btn-outline-primary">
@@ -82,16 +89,35 @@ The Shawshank redemption</textarea>
             </div>
         </div>
 
+
+        <div class="accordion" id="accordionExample">
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <!--<h5 class="mb-0">-->
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Filtering
+                        </button>
+                    <!--</h5>-->
+                </div>
+
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                    <div class="card-body">
+                        <form id ="filters"> Filter by:<br>
+                            <input type="checkbox" id="ratingFilterBox" onclick="toggleRatingFilter()"> IMDb Rating<br>
+                            <div id="ratingFilters">from:<input type="text" id="ratingLB"> to:<input type="text" id="ratingUB"><br></div>
+                            <input type="checkbox" id="votesFilterBox" onclick="toggleVotesFilter()"> IMDb Votes<br>
+                            <div id="votesFilters">from:<input type="text" id="votesLB"> to:<input type="text" id="votesUB"><br></div>
+                            <input type="checkbox" id="yearFilterBox" onclick="toggleYearFilter()"> Year<br>
+                            <div id="yearFilters">from:<input type="text" id="yearLB"> to:<input type="text" id="yearUB"><br></div>
+                            <input type="checkbox" id="runtimeFilterBox" onclick="toggleRuntimeFilter()"> Runtime<br>
+                            <div id="runtimeFilters">from:<input type="text" id="runtimeLB"> to:<input type="text" id="runtimeUB"><br></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <span class="border">
-            <form id ="info" name="info"> Additional Information:
-                <input class="info" type="checkbox" id="yearBox" checked> Year
-                <input class="info" type="checkbox" id="runtimeBox" checked> Runtime
-                <input class="info" type="checkbox" id="imdbVotesBox" checked> IMDb Votes
-                <input class="info" type="checkbox" id="metascoreBox" checked> MetaScore
-                <input class="info" type="checkbox" id="typeBox" checked> Type
-                <input class="info" type="checkbox" id="genreBox"> Genre
-                <input class="info" type="checkbox" id="plotBox"> Plot
-            </form>
             <form action="" id="sorting"> Sort By:
                 <input class="sorting" type="radio" name="sorting" id="name"> Name
                 <input class="sorting" type="radio" name="sorting" id="rating"> IMDB Rating
@@ -99,17 +125,7 @@ The Shawshank redemption</textarea>
                 <input class="sorting" type="radio" name="sorting" id="runtime"> Runtime
                 <input class="sorting" type="radio" name="sorting" id="votes"> IMDb Votes
                 <input class="sorting" type="radio" name="sorting" id="metascore"> MetaScore
-                <input class="sorting" type="radio" name="sorting" id="type"> Type
-            </form>
-            <form id ="filters"> Filter by:<br>
-                <input type="checkbox" id="ratingFilterBox" onclick="toggleRatingFilter()"> IMDb Rating<br>
-                <div id="ratingFilters">from:<input type="text" id="ratingLB"> to:<input type="text" id="ratingUB"><br></div>
-                <input type="checkbox" id="votesFilterBox" onclick="toggleVotesFilter()"> IMDb Votes<br>
-                <div id="votesFilters">from:<input type="text" id="votesLB"> to:<input type="text" id="votesUB"><br></div>
-                <input type="checkbox" id="yearFilterBox" onclick="toggleYearFilter()"> Year<br>
-                <div id="yearFilters">from:<input type="text" id="yearLB"> to:<input type="text" id="yearUB"><br></div>
-                <input type="checkbox" id="runtimeFilterBox" onclick="toggleRuntimeFilter()"> Runtime<br>
-                <div id="runtimeFilters">from:<input type="text" id="runtimeLB"> to:<input type="text" id="runtimeUB"><br></div>
+                <input  type="radio" name="sorting" id="type"> Type
             </form>
         </span>
 
@@ -120,14 +136,12 @@ The Shawshank redemption</textarea>
             Get Reviews
         </button>
         <br>
-        <div class="spinner-border text-primary" role="status">
+        <div class="spinner-border text-primary" role="status"  id="spinner">
             <span class="sr-only">Loading...</span>
         </div>
-        <i class="fa fa-sort-amount-asc" ></i>
-
 
         <br><br>
-        <table id="outputTable"></table>
+        <table class="table table-bordered" id="outputTable"></table>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>

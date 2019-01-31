@@ -21,6 +21,8 @@ function postAjax(url, data, success) {
 }
 
 function updateOutput(data){
+    var spinner = document.getElementById("spinner");
+    spinner.style.display = "block";
     getColumnHeaders();
     console.log(getRatingFilter())
     clearOutputTable();
@@ -33,6 +35,7 @@ function updateOutput(data){
             row.insertCell(columnIdx).innerHTML = responseObj[i][columnHeaders[columnIdx]];
         }
     }
+    spinner.style.display = "none";
 }
 
 function getAdditionalInfo(parameterName, review){
@@ -171,3 +174,5 @@ toggleRatingFilter();
 toggleVotesFilter();
 toggleRuntimeFilter();
 toggleYearFilter();
+var spinner = document.getElementById("spinner");
+spinner.style.display = "none";
