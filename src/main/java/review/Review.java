@@ -37,6 +37,27 @@ public class Review {
                 '}';
     }
 
+    private static String getHTML(String urlToRead) throws Exception {
+        StringBuilder result = new StringBuilder();
+        URL url = new URL(urlToRead);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        String line;
+        while ((line = rd.readLine()) != null) {
+            result.append(line);
+        }
+        rd.close();
+        return result.toString();
+    }
+
+    public static Review getReviewFromTitle(String title) throws Exception{
+        String jsonReview  = getHTML("http://www.omdbapi.com/?apikey=714ddca5&t=" + URLEncoder.encode(title, "UTF-8"));
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+        return objectMapper.readValue(jsonReview, Review.class);
+    }
+
     public String getGenre() {
         return genre;
     }
@@ -91,27 +112,6 @@ public class Review {
 
     public String getType() {
         return type;
-    }
-
-    private static String getHTML(String urlToRead) throws Exception {
-        StringBuilder result = new StringBuilder();
-        URL url = new URL(urlToRead);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        String line;
-        while ((line = rd.readLine()) != null) {
-            result.append(line);
-        }
-        rd.close();
-        return result.toString();
-    }
-
-    public static Review getReviewFromTitle(String title) throws Exception{
-        String jsonReview  = getHTML("http://www.omdbapi.com/?apikey=714ddca5&t=" + URLEncoder.encode(title, "UTF-8"));
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
-        return objectMapper.readValue(jsonReview, Review.class);
     }
 
 }
