@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+    <center>
     <head>
         <title>Review Aggregator Aggregator</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
@@ -12,9 +13,10 @@
         <form id="form">
             <div class="input-group">
             <div class="input-group-prepend">
-                <span class="input-group-text">Enter Movies<br>or TV series<br>separated by<br>Newline</span>
+                <span class="input-group-text">Enter Movies<br>or TV series<br>separated by<br>new lines</span>
             </div>
-            <textarea  class="form-control"   name="title" rows="10" cols="30" >A Star is Born
+                <textarea  class="form-control"   name="title" rows="10" cols="30" >
+A Star is Born
 The Man in the moon
 Say anything
 Moonstruck
@@ -42,14 +44,14 @@ The Shawshank redemption</textarea>
                     </label>
                     <label class="btn btn-outline-primary active">
                         <input class="info" type="checkbox" id="imdbVotesBox" checked autocomplete="off">
-                        <i class="far fa-star"></i> IMDb Votes
+                        <i class="fas fa-vote-yea"></i> IMDb Votes
                     </label>
                     <label class="btn btn-outline-primary active">
                         <input class="info" type="checkbox" id="metascoreBox" checked autocomplete="off">
                         <i class="far fa-star"></i> MetaScore
                     </label>
-                    <label class="btn btn-outline-primary active">
-                        <input class="info" type="checkbox" id="typeBox" checked autocomplete="off">
+                    <label class="btn btn-outline-primary">
+                        <input class="info" type="checkbox" id="typeBox" autocomplete="off">
                         <i class="fas fa-film"></i> Type
                     </label>
                     <label class="btn btn-outline-primary">
@@ -65,86 +67,69 @@ The Shawshank redemption</textarea>
 
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                <label class="input-group-text" for="inputGroupSelect01">Sort By</label>
+                <label class="input-group-text" for="sorting">Sort By</label>
             </div>
-            <select class="custom-select" id="inputGroupSelect01">
-                <option selected>No Sorting</option>
-                <option value="1" class="sorting">Name</option>
-                <option value="2" class="sorting">IMDB Rating</option>
-                <option value="3" class="sorting">Year</option>
-                <option value="4" class="sorting">Runtime</option>
-                <option value="5" class="sorting">IMDB Votes</option>
-                <option value="6" class="sorting">MetaScore</option>
-                <option value="7" class="sorting">Type</option>
+            <select class="custom-select" id="sorting">
+                <option value="" selected>No Sorting</option>
+                <option value="name">Name</option>
+                <option value="rating">IMDB Rating</option>
+                <option value="year">Year</option>
+                <option value="runtime">Runtime</option>
+                <option value="votes">IMDB Votes</option>
+                <option value="metascore">MetaScore</option>
+                <option value="type">Type</option>
             </select>
             <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-outline-primary active"  >
+                    <input type="radio" name="options" id="desc" autocomplete="off" checked>
+                    <i class="fas fa-sort-amount-down"></i> Descending
+                </label>
                 <label class="btn btn-outline-primary">
-                    <input type="radio" name="options" id="descending" autocomplete="off">
-                    <i class="fas fa-sort-amount-down"></i>Descending
-                </label>
-                <label class="btn btn-outline-primary active">
-                    <input type="radio" name="options" id="ascending" autocomplete="off" checked>
-                    <i class="fas fa-sort-amount-up"></i>Ascending
+                    <input type="radio" name="options" id="asc" autocomplete="off" >
+                    <i class="fas fa-sort-amount-up"></i> Ascending
                 </label>
             </div>
         </div>
 
-
-        <div class="accordion" id="accordionExample">
-            <div class="card">
-                <div class="card-header" id="headingOne">
-                    <!--<h5 class="mb-0">-->
-                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            Filtering
-                        </button>
-                    <!--</h5>-->
-                </div>
-
-                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-                    <div class="card-body">
-                        <form id ="filters"> Filter by:<br>
-                            <input type="checkbox" id="ratingFilterBox" onclick="toggleRatingFilter()"> IMDb Rating<br>
-                            <div id="ratingFilters">from:<input type="text" id="ratingLB"> to:<input type="text" id="ratingUB"><br></div>
-                            <input type="checkbox" id="votesFilterBox" onclick="toggleVotesFilter()"> IMDb Votes<br>
-                            <div id="votesFilters">from:<input type="text" id="votesLB"> to:<input type="text" id="votesUB"><br></div>
-                            <input type="checkbox" id="yearFilterBox" onclick="toggleYearFilter()"> Year<br>
-                            <div id="yearFilters">from:<input type="text" id="yearLB"> to:<input type="text" id="yearUB"><br></div>
-                            <input type="checkbox" id="runtimeFilterBox" onclick="toggleRuntimeFilter()"> Runtime<br>
-                            <div id="runtimeFilters">from:<input type="text" id="runtimeLB"> to:<input type="text" id="runtimeUB"><br></div>
-                        </form>
-                    </div>
-                </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="filtering">Filter By</label>
             </div>
+            <select class="custom-select" id="filtering">
+                <option value="" selected>No Filtering</option>
+                <option value="rating">IMDB Rating</option>
+                <option value="year">Year</option>
+                <option value="runtime">Runtime</option>
+                <option value="votes">IMDB Votes</option>
+            </select>
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-outline-primary active" >
+                    <input type="radio" name="options" id="greaterThan" autocomplete="off" checked>
+                    <i class="fas fa-greater-than"></i> Greater Than
+                </label>
+                <label class="btn btn-outline-primary">
+                    <input type="radio" name="options" id="lessThan" autocomplete="off">
+                    <i class="fas fa-less-than"></i> Less Than
+                </label>
+            </div>
+            <input type="text" class="form-control" >
         </div>
 
-        <span class="border">
-            <form action="" id="sorting"> Sort By:
-                <input class="sorting" type="radio" name="sorting" id="name"> Name
-                <input class="sorting" type="radio" name="sorting" id="rating"> IMDB Rating
-                <input class="sorting" type="radio" name="sorting" id="year"> Year
-                <input class="sorting" type="radio" name="sorting" id="runtime"> Runtime
-                <input class="sorting" type="radio" name="sorting" id="votes"> IMDb Votes
-                <input class="sorting" type="radio" name="sorting" id="metascore"> MetaScore
-                <input  type="radio" name="sorting" id="type"> Type
-            </form>
-        </span>
-
-        <br>
-
-        <button type="button" class="btn btn-primary" onclick="postAndUpdate()">
+        <button type="button" class="btn btn-primary btn-lg" onclick="postAndUpdate()">
             <i class="fas fa-sync-alt"></i>
             Get Reviews
         </button>
-        <br>
         <div class="spinner-border text-primary" role="status"  id="spinner">
             <span class="sr-only">Loading...</span>
         </div>
 
         <br><br>
         <table class="table table-bordered" id="outputTable"></table>
+
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
         <script src="restAccessor.js"></script>
     </body>
+    </center>
 </html>
