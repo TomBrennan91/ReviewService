@@ -3,6 +3,7 @@ package review;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
@@ -33,15 +34,20 @@ public class ReviewController {
                 e.printStackTrace();
             }
         }
-        sortReviews(reviews, sorting);
+
         filterReviews(reviews, filter);
+
+        sortReviews(reviews, sorting);
+
 
         System.out.println(titles.length + " -> " + reviews.size());
         return reviews;
     }
 
     private void sortReviews( ArrayList<Review> reviews, String sorting){
-        switch (sorting){
+        String[] splitSorting = sorting.split(":");
+
+        switch (splitSorting[0]){
             case "":
                 break;
             case "year":
@@ -64,6 +70,9 @@ public class ReviewController {
                 break;
             case "type":
                 reviews.sort((a,b) -> a.getType().compareToIgnoreCase(b.getType()));
+        }
+        if (splitSorting.length >= 2 && splitSorting[1].equalsIgnoreCase("asc")){
+            Collections.reverse(reviews);
         }
     }
 

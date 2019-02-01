@@ -1,9 +1,8 @@
 function postAndUpdate(){
     var titles = document.forms["form"].elements[0].value;
     titles = titles.replace(/\n/g,"~");
-    postAjax('http://localhost:8080/review?sort=' + getSortingParameter(), titles , function (data){updateOutput(data);});
+    postAjax('http://localhost:8080/review?sort=' + getSortingParameter() + getFilterParameter(), titles , function (data){updateOutput(data);});
 }
-// + getRatingFilter() + getVoteFilter() + getRuntimeFilter() + getYearFilter()
 
 function postAjax(url, data, success) {
     var params = typeof data == 'string' ? data : Object.keys(data).map(
@@ -49,15 +48,7 @@ function getAdditionalInfo(parameterName, review){
 }
 
 function getSortingParameter(){
-    return document.getElementById("sorting").value;
-}
-
-function getFilterParameter(){
-    return document.getElementById("filtering").value
-}
-
-function getFilter(){
-
+    return document.getElementById("sorting").value + ":" + ascOrDesc();
 }
 
 function ascOrDesc(){
@@ -68,45 +59,17 @@ function ascOrDesc(){
     }
 }
 
-//function getRatingFilter(){
-//    if (document.getElementById("ratingFilterBox").checked){
-//        var lowerBound = document.getElementById("ratingLB").value;
-//        if (!empty(lowerBound)) return "&ratingFilter=gt:" + lowerBound;
-//        var upperBound = document.getElementById("ratingUB").value;
-//        if (!empty(upperBound)) return "&ratingFilter=lt:" + upperBound;
-//    }
-//    return ""
-//}
-//
-//function getVoteFilter(){
-//    if (document.getElementById("votesFilterBox").checked){
-//        var lowerBound = document.getElementById("votesLB").value;
-//        if (!empty(lowerBound)) return "&votesFilter=gt:" + lowerBound;
-//        var upperBound = document.getElementById("votesUB").value;
-//        if (!empty(upperBound)) return "&votesFilter=lt:" + upperBound;
-//    }
-//    return ""
-//}
-//
-//function getRuntimeFilter(){
-//    if (document.getElementById("runtimeFilterBox").checked){
-//        var lowerBound = document.getElementById("runtimeLB").value;
-//        if (!empty(lowerBound)) return "&runtimeFilter=gt:" + lowerBound;
-//        var upperBound = document.getElementById("runtimeUB").value;
-//        if (!empty(upperBound)) return "&runtimeFilter=lt:" + upperBound;
-//    }
-//    return ""
-//}
-//
-//function getYearFilter(){
-//    if (document.getElementById("yearFilterBox").checked){
-//        var lowerBound = document.getElementById("yearLB").value;
-//        if (!empty(lowerBound)) return "&yearFilter=gt:" + lowerBound;
-//        var upperBound = document.getElementById("yearUB").value;
-//        if (!empty(upperBound)) return "&yearFilter=lt:" + upperBound;
-//    }
-//    return ""
-//}
+function getFilterParameter(){
+    return document.getElementById("filtering").value + ":" + greaterThanOrLessThan() + ":" + document.getElementById("filterValue").value
+}
+
+function greaterThanOrLessThan(){
+    if (document.getElementById("greaterThan").checked){
+        return "gt"
+    } else {
+        return "lt"
+    }
+}
 
 function getColumnHeaders(){
     var columnHeaders = ["title", "imdbRating"];
@@ -159,33 +122,6 @@ function empty(data){
     }
     return count == 0;
 }
-
-//function toggleRatingFilter(){
-//    toggleFilter("rating");
-//}
-//
-//function toggleYearFilter(){
-//    toggleFilter("year");
-//}
-//
-//function toggleRuntimeFilter(){
-//    toggleFilter("runtime");
-//}
-//
-//function toggleVotesFilter(){
-//    toggleFilter("votes");
-//}
-//
-//function toggleFilter(filterName){
-//    var x = document.getElementById(filterName + "Filters");
-//    if (document.getElementById(filterName + "FilterBox").checked) x.style.display = "block";
-//    else x.style.display = "none";
-//}
-//
-//toggleRatingFilter();
-//toggleVotesFilter();
-//toggleRuntimeFilter();
-//toggleYearFilter();
 
 var spinner = document.getElementById("spinner");
 spinner.style.display = "none";
