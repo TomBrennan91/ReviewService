@@ -12,7 +12,6 @@ import java.net.URLEncoder;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Review {
-
     private String title;
     private String year;
     private String runtime;
@@ -52,11 +51,12 @@ public class Review {
     }
 
     public static Review getReviewFromTitle(String title) throws Exception{
-        String jsonReview  = getHTML("http://www.omdbapi.com/?apikey=714ddca5&t=" + URLEncoder.encode(title, "UTF-8"));
+        String jsonReview  = getHTML("http://www.omdbapi.com/?apikey=" + Application.getAPIKey() + "&t=" + URLEncoder.encode(title, "UTF-8"));
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
         return objectMapper.readValue(jsonReview, Review.class);
     }
+
 
     public String getGenre() {
         return genre;

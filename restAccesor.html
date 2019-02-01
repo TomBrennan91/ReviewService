@@ -2,7 +2,7 @@
 <html>
     <center>
     <head>
-        <title>Review Aggregator Aggregator</title>
+        <title>Review Aggregator Aggregator (V1.0)</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     </head>
@@ -32,7 +32,7 @@ The Shawshank redemption</textarea>
             <div class="input-group mb-3">
                 <div class="btn-group btn-group-toggle" data-toggle="buttons" id="inputAdditional">
                     <div class="input-group-prepend">
-                        <label class="input-group-text" for="inputAdditional">Additional Information</label>
+                        <label class="input-group-text" for="inputAdditional">Additional Info</label>
                     </div>
                     <label class="btn btn-outline-primary active">
                         <input class="info" type="checkbox" id="yearBox" checked autocomplete="off">
@@ -80,7 +80,7 @@ The Shawshank redemption</textarea>
                 <option value="type">Type</option>
             </select>
             <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                <label class="btn btn-outline-primary active"  >
+                <label class="btn btn-outline-primary active">
                     <input type="radio" name="options" id="desc" autocomplete="off" checked>
                     <i class="fas fa-sort-amount-down"></i> Descending
                 </label>
@@ -103,16 +103,16 @@ The Shawshank redemption</textarea>
                 <option value="votes">IMDB Votes</option>
             </select>
             <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                <label class="btn btn-outline-primary active" >
-                    <input type="radio" name="options" id="greaterThan" autocomplete="off" checked>
+                <label class="btn btn-outline-primary active">
+                    <input type="radio" name="filterOptions" id="greaterThan" autocomplete="off" checked>
                     <i class="fas fa-greater-than"></i> Greater Than
                 </label>
                 <label class="btn btn-outline-primary">
-                    <input type="radio" name="options" id="lessThan" autocomplete="off">
+                    <input type="radio" name="filterOptions" id="lessThan" autocomplete="off">
                     <i class="fas fa-less-than"></i> Less Than
                 </label>
             </div>
-            <input type="text" class="form-control" id="filterValue">
+            <input type="number" class="form-control" id="filterValue">
         </div>
 
         <button type="button" class="btn btn-primary btn-lg" onclick="postAndUpdate()">

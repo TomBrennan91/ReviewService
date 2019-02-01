@@ -35,16 +35,18 @@ public class ReviewController {
             }
         }
 
-        filterReviews(reviews, filter);
-
-        sortReviews(reviews, sorting);
-
+        try {
+            filterReviews(reviews, filter);
+            sortReviews(reviews, sorting);
+        } catch (NumberFormatException e){
+            System.err.println(e.getMessage());
+        }
 
         System.out.println(titles.length + " -> " + reviews.size());
         return reviews;
     }
 
-    private void sortReviews( ArrayList<Review> reviews, String sorting){
+    private void sortReviews( ArrayList<Review> reviews, String sorting) throws NumberFormatException{
         String[] splitSorting = sorting.split(":");
 
         switch (splitSorting[0]){
@@ -77,7 +79,7 @@ public class ReviewController {
     }
 
 
-    private void filterReviews(ArrayList<Review> reviews, String filter){
+    private void filterReviews(ArrayList<Review> reviews, String filter) throws NumberFormatException {
         if (filter.equalsIgnoreCase("")) return;
         String[] splitFilter = filter.split(":");
         if (splitFilter.length < 3) return;

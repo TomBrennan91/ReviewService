@@ -1,7 +1,7 @@
 function postAndUpdate(){
     var titles = document.forms["form"].elements[0].value;
     titles = titles.replace(/\n/g,"~");
-    postAjax('http://localhost:8080/review?sort=' + getSortingParameter() + getFilterParameter(), titles , function (data){updateOutput(data);});
+    postAjax('http://localhost:8080/review?sort=' + getSortingParameter() + "&filter=" + getFilterParameter(), titles , function (data){updateOutput(data);});
 }
 
 function postAjax(url, data, success) {
@@ -125,5 +125,3 @@ function empty(data){
 
 var spinner = document.getElementById("spinner");
 spinner.style.display = "none";
-
-document.getElementById("desc").checked = true;
