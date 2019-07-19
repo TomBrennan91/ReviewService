@@ -43,6 +43,14 @@ public class Review {
                 '}';
     }
 
+    public void setImdbID(String imdbID) {
+        this.imdbID = imdbID;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     private static String getHTML(String urlToRead) throws Exception {
         StringBuilder result = new StringBuilder();
         URL url = new URL(urlToRead);

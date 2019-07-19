@@ -23,17 +23,34 @@ public class ReviewController {
 
     @GetMapping("/getall")
     public void getAll(){
+        System.out.println("getting all ");
         reviewService.getAll();
     }
 
     @GetMapping("get/{id}")
     public Review getOne(@PathVariable String id){
+        System.out.println("getting review " + id);
         return reviewService.getReview(id);
     }
 
     @GetMapping("put/{id}")
     public Review put(@PathVariable String id){
-        return reviews(id,"", "").get(0);
+        Review newReview = new Review();
+        newReview.setImdbID(id);
+        newReview.setTitle("itWorks");
+        reviewService.addReview(newReview);
+        System.out.println(newReview.toString());
+        return newReview;
+    }
+
+    @GetMapping("put1")
+    public Review put(){
+        Review newReview = new Review();
+        newReview.setImdbID("1");
+        newReview.setTitle("itWorks");
+        reviewService.addReview(newReview);
+        System.out.println(newReview.toString());
+        return newReview;
     }
 
     @CrossOrigin
