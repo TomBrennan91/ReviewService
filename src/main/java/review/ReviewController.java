@@ -1,5 +1,6 @@
 package review;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -9,7 +10,31 @@ import java.util.concurrent.atomic.AtomicLong;
 @RestController
 public class ReviewController {
 
+    @Autowired
+    private ReviewService reviewService;
+
     private final AtomicLong counter = new AtomicLong();
+
+    @GetMapping("/hello")
+    public String greet(){
+        System.out.println("hello world");
+        return "hello world";
+    }
+
+    @GetMapping("/getall")
+    public void getAll(){
+        reviewService.getAll();
+    }
+
+    @GetMapping("get/{id}")
+    public Review getOne(@PathVariable String id){
+        return reviewService.getReview(id);
+    }
+
+    @GetMapping("put/{id}")
+    public Review put(@PathVariable String id){
+        return reviews(id,"", "").get(0);
+    }
 
     @CrossOrigin
     @PostMapping("/review")

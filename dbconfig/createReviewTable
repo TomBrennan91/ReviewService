@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS shows (
+     imdb_id VARCHAR(255),
+     show_id INT AUTO_INCREMENT,
+     title VARCHAR(255) NOT NULL,
+     runtime VARCHAR(255),
+     imdb_rating VARCHAR(255),
+     metascore VARCHAR(255),
+     imdb_votes VARCHAR(255),
+     type VARCHAR(255),
+     genre VARCHAR(255),
+     plot TEXT
+ )
+
+
+INSERT INTO shows (imdb_id, show_id, title)
+VALUES (1, 2, 3);

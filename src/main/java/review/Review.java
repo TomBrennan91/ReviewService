@@ -4,14 +4,19 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+@Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Review {
+    @Id
+    private String imdbID;
     private String title;
     private String year;
     private String runtime;
@@ -21,6 +26,8 @@ public class Review {
     private String type;
     private String genre;
     private String plot;
+    private String boxOffice;
+    private String director;
 
     @Override
     public String toString() {
@@ -114,4 +121,15 @@ public class Review {
         return type;
     }
 
+    public String getImdbID() {
+        return imdbID;
+    }
+
+    public String getBoxOffice() {
+        return boxOffice;
+    }
+
+    public String getDirector() {
+        return director;
+    }
 }
