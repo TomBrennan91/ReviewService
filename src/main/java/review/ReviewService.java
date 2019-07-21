@@ -9,12 +9,16 @@ public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
 
-    public void getAll(){
-        reviewRepository.findAll().forEach(review -> System.out.println(review.toString()));
+    public Iterable<Review> getAll(){
+        return reviewRepository.findAll();
     }
 
     public Review getReview(String id){
         return  reviewRepository.findById(id).get();
+    }
+
+    public Review getByTitle(String title){
+        return reviewRepository.findByTitle(title);
     }
 
     public void addReview(Review review){

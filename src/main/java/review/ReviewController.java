@@ -1,10 +1,17 @@
 package review;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
@@ -13,44 +20,29 @@ public class ReviewController {
     @Autowired
     private ReviewService reviewService;
 
-    private final AtomicLong counter = new AtomicLong();
+    private AtomicLong counter = new AtomicLong();
 
-    @GetMapping("/hello")
-    public String greet(){
-        System.out.println("hello world");
-        return "hello world";
-    }
+    private final LocalDate startDate = LocalDate.now();
 
     @GetMapping("/getall")
-    public void getAll(){
+    public Iterable<Review> getAll(){
         System.out.println("getting all ");
-        reviewService.getAll();
+        return reviewService.getAll();
     }
 
-    @GetMapping("get/{id}")
-    public Review getOne(@PathVariable String id){
-        System.out.println("getting review " + id);
-        return reviewService.getReview(id);
+    @GetMapping("search/{id}")
+    public Review findbyTitle(@PathVariable String title){
+        System.out.println("getting review " + title);
+        return reviewService.getByTitle(title);
     }
 
-    @GetMapping("put/{id}")
-    public Review put(@PathVariable String id){
-        Review newReview = new Review();
-        newReview.setImdbID(id);
-        newReview.setTitle("itWorks");
-        reviewService.addReview(newReview);
-        System.out.println(newReview.toString());
-        return newReview;
-    }
-
-    @GetMapping("put1")
-    public Review put(){
-        Review newReview = new Review();
-        newReview.setImdbID("1");
-        newReview.setTitle("itWorks");
-        reviewService.addReview(newReview);
-        System.out.println(newReview.toString());
-        return newReview;
+    @CrossOrigin
+    @GetMapping("/reviewsServiced")
+    public Object getReviewsServiced() throws JsonProcessingException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
+        ObjectMapper mapper = new ObjectMapper();
+        String reviewsServiced = counter.get() + " Reviews serviced since " + formatter.format(startDate);
+        return  mapper.writeValueAsString(reviewsServiced);
     }
 
     @CrossOrigin
@@ -58,24 +50,31 @@ public class ReviewController {
     public ArrayList<Review> reviews(@RequestBody String input,
                                      @RequestParam(value = "sort", defaultValue = "") String sorting,
                                      @RequestParam(value = "filter", defaultValue = "") String filter){
-        System.out.println("request# " + counter.incrementAndGet());
+
         System.out.println("sorting=" + sorting + ",filter=" + filter);
         String titles[] = input.split("~");
 
         ArrayList<Review> reviews = new ArrayList<>();
-
         for (String title : titles){
-            try {
-                Review review = Review.getReviewFromTitle(title);
-                if (review.getImdbRating() != null) {
-                    reviews.add(review);
-                } else {
-                    System.err.println(title);
+            Review reviewFromDB = reviewService.getByTitle(title);
+            if (reviewFromDB == null) {
+                try {
+                    Review review = Review.getReviewFromTitle(title);
+                    if (review.getImdbRating() != null) {
+                        reviewService.addReview(review);
+                        reviews.add(review);
+                    } else {
+                        System.err.println(title);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e){
-                e.printStackTrace();
+            } else {
+                reviews.add(reviewFromDB);
             }
         }
+
+        System.out.println("request # " + (counter.addAndGet(reviews.size())));
 
         try {
             filterReviews(reviews, filter);

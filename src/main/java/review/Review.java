@@ -6,11 +6,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.List;
+import java.util.Optional;
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -28,6 +32,16 @@ public class Review {
     private String plot;
     private String boxOffice;
     private String director;
+    @Transient
+    private List<Rating> ratings;
+    private String rottenTomatoesRating;
+    private String production;
+    private String language;
+    private String country;
+    private String poster;
+    private String website;
+    private String rated;
+
 
     @Override
     public String toString() {
@@ -43,15 +57,7 @@ public class Review {
                 '}';
     }
 
-    public void setImdbID(String imdbID) {
-        this.imdbID = imdbID;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    private static String getHTML(String urlToRead) throws Exception {
+    private static String getHTML(String urlToRead) throws IOException {
         StringBuilder result = new StringBuilder();
         URL url = new URL(urlToRead);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -65,79 +71,99 @@ public class Review {
         return result.toString();
     }
 
-    public static Review getReviewFromTitle(String title) throws Exception{
+    public static Review getReviewFromTitle(String title) throws IOException {
         String jsonReview  = getHTML("http://www.omdbapi.com/?apikey=" + Application.getAPIKey() + "&t=" + URLEncoder.encode(title, "UTF-8"));
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
-        return objectMapper.readValue(jsonReview, Review.class);
+        Review review = objectMapper.readValue(jsonReview, Review.class);
+        review.extractRottenTomatoesRating();
+        return review;
     }
 
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public String getPlot() {
-        return plot;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getYear() {
-        return year;
-    }
 
     public Integer safeGetYear() {
         return Integer.parseInt(year.split("–")[0]);
     }
-
-    public String getRuntime() {
-        return runtime;
-    }
-
     public Integer safeGetRuntime() {
         return Integer.parseInt(runtime.replace(" min", "").replace("N/A","0"));
     }
-
-    public String getImdbRating() {
-        return imdbRating;
-    }
-
     public Integer safeGetImdbRating() {
         return Integer.parseInt(imdbRating.replace(".","").replace("N/A",""));
     }
-
-    public String getImdbVotes() {
-        return imdbVotes;
-    }
-
     public Integer safeGetImdbVotes() {
         return Integer.parseInt(imdbVotes.replace(",","").replace("N/A",""));
     }
-
-    public String getMetascore() {
-        return metascore;
-    }
-
     public Integer safeGetMetascore() {
         return Integer.parseInt(metascore.replace("N/A","0"));
     }
 
+    public void extractRottenTomatoesRating(){
+        System.out.println("extracting RT Rating");
+        if (ratings != null) {
+            Optional<Rating> RTRating = ratings.stream().filter(rating -> rating.source.equalsIgnoreCase("Rotten Tomatoes")).findFirst();
+            if (RTRating.isPresent()) {
+                System.out.println("RT rating extracted " + RTRating.get().value);
+                this.rottenTomatoesRating = RTRating.get().value;
+            }
+        }
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+    public String getPlot() {
+        return plot;
+    }
+    public String getTitle() {
+        return title;
+    }
+    public String getYear() {
+        return year;
+    }
+    public String getRuntime() {
+        return runtime;
+    }
+    public String getImdbRating() {
+        return imdbRating;
+    }
+    public String getImdbVotes() {
+        return imdbVotes;
+    }
+    public String getMetascore() {
+        return metascore;
+    }
     public String getType() {
         return type;
     }
-
     public String getImdbID() {
         return imdbID;
     }
-
     public String getBoxOffice() {
         return boxOffice;
     }
-
-    public String getDirector() {
+    public String getDirector(){
         return director;
     }
+    public String getProduction() {
+        return production;
+    }
+    public String getLanguage() {
+        return language;
+    }
+    public String getCountry() {
+        return country;
+    }
+    public String getPoster() {
+        return poster;
+    }
+    public String getWebsite() {
+        return website;
+    }
+    public String getRated() {
+        return rated;
+    }
+    public String getRottenTomatoesRating(){
+        return rottenTomatoesRating;
+    }
+
 }
