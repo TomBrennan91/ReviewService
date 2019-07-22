@@ -13,7 +13,7 @@ public class ReviewService {
         return reviewRepository.findAll();
     }
 
-    public Review getReview(String id){
+    public Review getReview(Integer id){
         return  reviewRepository.findById(id).get();
     }
 

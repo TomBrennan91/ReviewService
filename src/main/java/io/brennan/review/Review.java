@@ -1,5 +1,6 @@
 package io.brennan.review;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +22,10 @@ import java.util.Optional;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Review {
     @Id
+    private Integer id;
+
+    @Transient
+    @JsonIgnore
     private String imdbID;
     private String title;
     private String year;
@@ -34,6 +39,7 @@ public class Review {
     private String boxOffice;
     private String director;
     @Transient
+    @JsonIgnore
     private List<Rating> ratings;
     private String rottenTomatoesRating;
     private String production;
@@ -77,6 +83,7 @@ public class Review {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
         Review review = objectMapper.readValue(jsonReview, Review.class);
+        review.extractID();
         review.extractRottenTomatoesRating();
         return review;
     }
@@ -99,12 +106,33 @@ public class Review {
     }
 
     public void extractRottenTomatoesRating(){
-        System.out.println("extracting RT Rating");
-        if (ratings != null) {
-            Optional<Rating> RTRating = ratings.stream().filter(rating -> rating.source.equalsIgnoreCase("Rotten Tomatoes")).findFirst();
-            if (RTRating.isPresent()) {
-                System.out.println("RT rating extracted " + RTRating.get().value);
-                this.rottenTomatoesRating = RTRating.get().value;
+        try {
+
+            if (ratings != null && ratings.size() > 0) {
+                System.out.println("extracting RT Rating from " + ratings.size() + " ratings");
+                for (Rating rating : ratings) {
+                    System.out.println(rating.toString());
+                }
+                Optional<Rating> RTRating = ratings.stream()
+                                                   .filter(rating -> rating.source.equalsIgnoreCase("Rotten Tomatoes"))
+                                                   .findAny();
+                if (RTRating.isPresent()) {
+                    System.out.println("RT rating extracted " + RTRating.get().value);
+                    this.rottenTomatoesRating = RTRating.get().value;
+                }
+            }
+        } catch (NullPointerException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void extractID(){
+        System.out.println("attempting to extract ID from " + imdbID);
+        if (imdbID != null  && imdbID.length() > 2){
+            try {
+                id = Integer.parseInt(imdbID.substring(2));
+            } catch (NumberFormatException e){
+                e.printStackTrace();
             }
         }
     }
@@ -166,5 +194,11 @@ public class Review {
     public String getRottenTomatoesRating(){
         return rottenTomatoesRating;
     }
+    public List<Rating> getRatings() {
+        return ratings;
+    }
 
+    public int getId() {
+        return id;
+    }
 }

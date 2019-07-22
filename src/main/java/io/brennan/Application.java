@@ -12,6 +12,7 @@ public class Application {
     public static void main(String[] args) throws IOException{
         setAPIKey();
         SpringApplication.run(Application.class, args);
+        System.out.println("*** APPLICATION STARTED ***");
     }
 
     public static String getAPIKey() {
