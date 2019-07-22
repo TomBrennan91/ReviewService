@@ -187,4 +187,13 @@ public class Review {
     public int getId() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "Review{" +
+                "id=" + id +
+                ", imdbID='" + imdbID + '\'' +
+                ", title='" + title + '\'' +
+                '}';
+    }
 }

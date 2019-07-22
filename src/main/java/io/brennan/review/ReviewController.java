@@ -49,8 +49,9 @@ public class ReviewController {
     public ArrayList<Review> reviews(@RequestBody String input,
                                      @RequestParam(value = "sort", defaultValue = "") String sorting,
                                      @RequestParam(value = "filter", defaultValue = "") String filter){
-
+        System.out.println(input);
         System.out.println("sorting=" + sorting + ",filter=" + filter);
+        input = input.replace("\"", "");
         String titles[] = input.split("~");
 
         ArrayList<Review> reviews = new ArrayList<>();
@@ -58,17 +59,15 @@ public class ReviewController {
             Review reviewFromDB = reviewService.getByTitle(title);
             if (reviewFromDB == null) {
                 try {
+                    System.out.println("review not cached");
                     Review review = Review.getReviewFromTitle(title);
-                    if (review.getImdbRating() != null) {
-                        reviewService.addReview(review);
-                        reviews.add(review);
-                    } else {
-                        System.err.println(title);
-                    }
+                    reviewService.addReview(review);
+                    reviews.add(review);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
+                System.out.println("review cached");
                 reviews.add(reviewFromDB);
                 DBcounter.incrementAndGet();
             }
