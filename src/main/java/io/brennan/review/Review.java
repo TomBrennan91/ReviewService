@@ -91,6 +91,9 @@ public class Review {
     public Integer safeGetMetascore() {
         return Integer.parseInt(metascore.replace("N/A","0"));
     }
+    public Integer safeGetRT() {
+        return Integer.parseInt(rottenTomatoesRating.replace("%","").replace("N/A","0"));
+    }
 
     private void extractRottenTomatoesRating(){
         try {

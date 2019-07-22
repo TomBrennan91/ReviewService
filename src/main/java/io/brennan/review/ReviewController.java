@@ -23,10 +23,26 @@ public class ReviewController {
 
     private final LocalDate startDate = LocalDate.now();
 
+    @CrossOrigin
     @GetMapping("/getall")
-    public Iterable<Review> getAll(){
-        System.out.println("getting all ");
-        return reviewService.getAll();
+    public Iterable<Review> getAll(@RequestParam(value = "sort", defaultValue = "") String sorting,
+                                   @RequestParam(value = "filter", defaultValue = "") String filter){
+        System.out.println("getting all " + "sorting=" + sorting + ",filter=" + filter);
+
+        ArrayList <Review> reviews = new ArrayList<>();
+        reviewService.getAll().forEach(review -> reviews.add(review));
+
+        try {
+            filterReviews(reviews, filter);
+            sortReviews(reviews, sorting);
+        } catch (NumberFormatException e){
+            System.err.println(e.getMessage());
+        }
+
+        counter.addAndGet(reviews.size());
+        DBcounter.addAndGet(reviews.size());
+
+        return reviews;
     }
 
     @GetMapping("search/{id}")
@@ -61,8 +77,12 @@ public class ReviewController {
                 try {
                     System.out.println("review not cached");
                     Review review = Review.getReviewFromTitle(title);
-                    reviewService.addReview(review);
-                    reviews.add(review);
+                    if (review.getImdbID() == null){
+                        System.err.println("failed to find '" + title + "'");
+                    } else {
+                        reviewService.addReview(review);
+                        reviews.add(review);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -145,7 +165,12 @@ public class ReviewController {
                 else    reviews.removeIf(review -> review.safeGetRuntime() > Integer.parseInt(value.replace(",","").replace("N/A","")));
                 break;
             case "metascore":
-
+                if (gt) reviews.removeIf(review -> review.safeGetMetascore() < Integer.parseInt(value.replace("N/A","")));
+                else    reviews.removeIf(review -> review.safeGetMetascore() > Integer.parseInt(value.replace("N/A","")));
+                break;
+            case "rottentomatoes":
+                if (gt) reviews.removeIf(review -> review.safeGetRT() < Integer.parseInt(value.replace("N/A","")));
+                else    reviews.removeIf(review -> review.safeGetRT() > Integer.parseInt(value.replace("N/A","")));
                 break;
         }
     }
