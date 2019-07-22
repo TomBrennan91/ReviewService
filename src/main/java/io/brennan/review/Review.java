@@ -2,6 +2,7 @@ package io.brennan.review;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.brennan.Application;
@@ -25,7 +26,6 @@ public class Review {
     private Integer id;
 
     @Transient
-    @JsonIgnore
     private String imdbID;
     private String title;
     private String year;
@@ -39,7 +39,6 @@ public class Review {
     private String boxOffice;
     private String director;
     @Transient
-    @JsonIgnore
     private List<Rating> ratings;
     private String rottenTomatoesRating;
     private String production;
@@ -50,19 +49,6 @@ public class Review {
     private String rated;
 
 
-    @Override
-    public String toString() {
-        return  "" + title + "{" +
-                ", year='" + year + '\'' +
-                ", runtime='" + runtime + '\'' +
-                ", imdbRating='" + imdbRating + '\'' +
-                ", metascore='" + metascore + '\'' +
-                ", imdbVotes='" + imdbVotes + '\'' +
-                ", type='" + type + '\'' +
-                ", genre='" + genre + '\'' +
-                ", plot='" + plot + '\'' +
-                '}';
-    }
 
     private static String getHTML(String urlToRead) throws IOException {
         StringBuilder result = new StringBuilder();
@@ -83,6 +69,7 @@ public class Review {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
         Review review = objectMapper.readValue(jsonReview, Review.class);
+        System.out.println(review.toString());
         review.extractID();
         review.extractRottenTomatoesRating();
         return review;
@@ -105,7 +92,7 @@ public class Review {
         return Integer.parseInt(metascore.replace("N/A","0"));
     }
 
-    public void extractRottenTomatoesRating(){
+    private void extractRottenTomatoesRating(){
         try {
 
             if (ratings != null && ratings.size() > 0) {
@@ -126,7 +113,7 @@ public class Review {
         }
     }
 
-    public void extractID(){
+    private void extractID(){
         System.out.println("attempting to extract ID from " + imdbID);
         if (imdbID != null  && imdbID.length() > 2){
             try {
@@ -197,7 +184,6 @@ public class Review {
     public List<Rating> getRatings() {
         return ratings;
     }
-
     public int getId() {
         return id;
     }
