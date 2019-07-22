@@ -1,4 +1,4 @@
-package review;
+package io.brennan.review;
 
 public class Rating {
     String source;

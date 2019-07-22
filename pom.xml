@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.springframework</groupId>
-    <artifactId>review-service</artifactId>
+    <artifactId>io.brennan.review-service</artifactId>
     <version>0.8</version>
 
     <parent>
@@ -30,11 +30,6 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.mashape.unirest</groupId>
-            <artifactId>unirest-java</artifactId>
-            <version>1.4.9</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

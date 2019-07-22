@@ -1,8 +1,9 @@
-package review;
+package io.brennan.review;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.brennan.Application;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

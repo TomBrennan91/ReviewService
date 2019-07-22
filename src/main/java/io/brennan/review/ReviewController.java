@@ -1,17 +1,14 @@
-package review;
+package io.brennan.review;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
@@ -21,6 +18,8 @@ public class ReviewController {
     private ReviewService reviewService;
 
     private AtomicLong counter = new AtomicLong();
+
+    private AtomicLong DBcounter = new AtomicLong();
 
     private final LocalDate startDate = LocalDate.now();
 
@@ -32,7 +31,7 @@ public class ReviewController {
 
     @GetMapping("search/{id}")
     public Review findbyTitle(@PathVariable String title){
-        System.out.println("getting review " + title);
+        System.out.println("getting io.brennan.review " + title);
         return reviewService.getByTitle(title);
     }
 
@@ -41,7 +40,7 @@ public class ReviewController {
     public Object getReviewsServiced() throws JsonProcessingException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
         ObjectMapper mapper = new ObjectMapper();
-        String reviewsServiced = counter.get() + " Reviews serviced since " + formatter.format(startDate);
+        String reviewsServiced = counter.get() + " Reviews serviced since " + formatter.format(startDate) + " (of which " + DBcounter.get() + " were cached)";
         return  mapper.writeValueAsString(reviewsServiced);
     }
 
@@ -71,6 +70,7 @@ public class ReviewController {
                 }
             } else {
                 reviews.add(reviewFromDB);
+                DBcounter.incrementAndGet();
             }
         }
 
