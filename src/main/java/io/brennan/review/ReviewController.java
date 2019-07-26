@@ -25,7 +25,7 @@ public class ReviewController {
 
     @CrossOrigin
     @GetMapping("/getall")
-    public Iterable<Review> getAll(@RequestParam(value = "sort", defaultValue = "") String sorting,
+    public ReviewResponse getAll(@RequestParam(value = "sort", defaultValue = "") String sorting,
                                    @RequestParam(value = "filter", defaultValue = "") String filter){
         System.out.println("getting all " + "sorting=" + sorting + ",filter=" + filter);
 
@@ -42,7 +42,18 @@ public class ReviewController {
         counter.addAndGet(reviews.size());
         DBcounter.addAndGet(reviews.size());
 
-        return reviews;
+        ArrayList<Review> movies = new ArrayList<>();
+        ArrayList<Review> series = new ArrayList<>();
+
+        for (Review review : reviews){
+            if (review.getType().equalsIgnoreCase("movie")){
+                movies.add(review);
+            } else {
+                series.add(review);
+            }
+        }
+
+        return new ReviewResponse(series, movies);
     }
 
     @GetMapping("search/{id}")
@@ -62,7 +73,7 @@ public class ReviewController {
 
     @CrossOrigin
     @PostMapping("/review")
-    public ArrayList<Review> reviews(@RequestBody String input,
+    public ReviewResponse getReviews(@RequestBody String input,
                                      @RequestParam(value = "sort", defaultValue = "") String sorting,
                                      @RequestParam(value = "filter", defaultValue = "") String filter){
         System.out.println(input);
@@ -70,40 +81,52 @@ public class ReviewController {
         input = input.replace("\"", "");
         String titles[] = input.split("~");
 
-        ArrayList<Review> reviews = new ArrayList<>();
+
+        ArrayList<Review> movies = new ArrayList<>();
+        ArrayList<Review> series = new ArrayList<>();
+
         for (String title : titles){
             Review reviewFromDB = reviewService.getByTitle(title);
             if (reviewFromDB == null) {
                 try {
-                    System.out.println("review not cached");
                     Review review = Review.getReviewFromTitle(title);
                     if (review.getImdbID() == null){
                         System.err.println("failed to find '" + title + "'");
                     } else {
                         reviewService.addReview(review);
-                        reviews.add(review);
+                        if (review.getType().equalsIgnoreCase("movie")){
+                            movies.add(review);
+                        } else {
+                            series.add(review);
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
-                System.out.println("review cached");
-                reviews.add(reviewFromDB);
+                if (reviewFromDB.getType().equalsIgnoreCase("movie")){
+                    movies.add(reviewFromDB);
+                } else {
+                    series.add(reviewFromDB);
+                }
                 DBcounter.incrementAndGet();
             }
         }
 
-        System.out.println("request # " + (counter.addAndGet(reviews.size())));
+        System.out.println("request # " + (counter.addAndGet(movies.size() + series.size())));
 
         try {
-            filterReviews(reviews, filter);
-            sortReviews(reviews, sorting);
+            filterReviews(series, filter);
+            filterReviews(movies, filter);
+            sortReviews(series, sorting);
+            sortReviews(movies, sorting);
         } catch (NumberFormatException e){
             System.err.println(e.getMessage());
         }
 
-        System.out.println(titles.length + " -> " + reviews.size());
-        return reviews;
+        System.out.println(titles.length + " -> " + series.size() + "+" + movies.size());
+
+        return new ReviewResponse(series, movies);
     }
 
     private void sortReviews( ArrayList<Review> reviews, String sorting) throws NumberFormatException{
