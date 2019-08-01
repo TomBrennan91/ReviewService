@@ -2,9 +2,11 @@ package io.brennan.review;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.brennan.Utilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -22,6 +24,20 @@ public class ReviewController {
     private AtomicLong DBcounter = new AtomicLong();
 
     private final LocalDate startDate = LocalDate.now();
+
+    @CrossOrigin
+    @GetMapping("/boxofficetop5")
+    public String getBoxOfficeTop5() throws IOException {
+        String rawMojo = Utilities.getHTML("https://www.boxofficemojo.com/data/js/wknd5.php");
+        String[] splitMojo = rawMojo.split("<td class=mojo_row>");
+        StringBuilder formattedMojo = new StringBuilder();
+        for (int i = 1 ; i <= 5 ; i++){
+            String[] before = splitMojo[i].split("</td>",2);
+            formattedMojo.append(before[0].substring(3) + "\r\n");
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(formattedMojo);
+    }
 
     @CrossOrigin
     @GetMapping("/getall")
@@ -75,7 +91,8 @@ public class ReviewController {
     @PostMapping("/review")
     public ReviewResponse getReviews(@RequestBody String input,
                                      @RequestParam(value = "sort", defaultValue = "") String sorting,
-                                     @RequestParam(value = "filter", defaultValue = "") String filter){
+                                     @RequestParam(value = "filter", defaultValue = "") String filter,
+                                     @RequestParam(value = "year", defaultValue = "") String year){
         System.out.println(input);
         System.out.println("sorting=" + sorting + ",filter=" + filter);
         input = input.replace("\"", "");
@@ -89,8 +106,8 @@ public class ReviewController {
             Review reviewFromDB = reviewService.getByTitle(title);
             if (reviewFromDB == null) {
                 try {
-                    Review review = Review.getReviewFromTitle(title);
-                    if (review.getImdbID() == null){
+                    Review review = Review.getReviewFromTitle(title, year);
+                    if (review.getImdbID() == null || review.getPoster().equals("N/A")){
                         System.err.println("failed to find '" + title + "'");
                     } else {
                         reviewService.addReview(review);

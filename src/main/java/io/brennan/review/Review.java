@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.brennan.Application;
+import io.brennan.Utilities;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -16,6 +17,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,22 +52,15 @@ public class Review {
 
 
 
-    private static String getHTML(String urlToRead) throws IOException {
-        StringBuilder result = new StringBuilder();
-        URL url = new URL(urlToRead);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        String line;
-        while ((line = rd.readLine()) != null) {
-            result.append(line);
+    public static Review getReviewFromTitle(String title, String year) throws IOException {
+        String jsonReview;
+        if (year.equals("now")){
+            Integer thisYear = LocalDateTime.now().getYear();
+            year = thisYear.toString();
+            jsonReview  = Utilities.getHTML("http://www.omdbapi.com/?apikey=" + Application.getAPIKey() + "&t=" + URLEncoder.encode(title, "UTF-8") + "&y=" + year);
+        } else {
+            jsonReview  = Utilities.getHTML("http://www.omdbapi.com/?apikey=" + Application.getAPIKey() + "&t=" + URLEncoder.encode(title, "UTF-8"));
         }
-        rd.close();
-        return result.toString();
-    }
-
-    public static Review getReviewFromTitle(String title) throws IOException {
-        String jsonReview  = getHTML("http://www.omdbapi.com/?apikey=" + Application.getAPIKey() + "&t=" + URLEncoder.encode(title, "UTF-8"));
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
         Review review = objectMapper.readValue(jsonReview, Review.class);
@@ -74,7 +69,6 @@ public class Review {
         review.extractRottenTomatoesRating();
         return review;
     }
-
 
     public Integer safeGetYear() {
         return Integer.parseInt(year.split("–")[0]);
@@ -96,23 +90,19 @@ public class Review {
     }
 
     private void extractRottenTomatoesRating(){
-        try {
-
-            if (ratings != null && ratings.size() > 0) {
-                System.out.println("extracting RT Rating from " + ratings.size() + " ratings");
-                for (Rating rating : ratings) {
-                    System.out.println(rating.toString());
-                }
+        if (ratings == null || ratings.size() == 0) {
+            this.rottenTomatoesRating = "N/A";
+        } else {
+            try {
                 Optional<Rating> RTRating = ratings.stream()
                                                    .filter(rating -> rating.source.equalsIgnoreCase("Rotten Tomatoes"))
                                                    .findAny();
                 if (RTRating.isPresent()) {
-                    System.out.println("RT rating extracted " + RTRating.get().value);
-                    this.rottenTomatoesRating = RTRating.get().value;
+                    this.rottenTomatoesRating = RTRating.get().value.replace("%", "");
                 }
+            } catch (NullPointerException e){
+                e.printStackTrace();
             }
-        } catch (NullPointerException e){
-            e.printStackTrace();
         }
     }
 
