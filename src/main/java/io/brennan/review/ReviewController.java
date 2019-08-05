@@ -36,7 +36,8 @@ public class ReviewController {
             formattedMojo.append(before[0].substring(3) + "\r\n");
         }
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(formattedMojo);
+        String output = mapper.writeValueAsString(formattedMojo);
+        return output.replace("&amp;","&");
     }
 
     @CrossOrigin

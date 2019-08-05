@@ -1,8 +1,6 @@
 package io.brennan.review;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.brennan.Application;
@@ -11,11 +9,7 @@ import io.brennan.Utilities;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -49,6 +43,7 @@ public class Review {
     private String poster;
     private String website;
     private String rated;
+    private String totalSeasons;
 
 
 
@@ -174,12 +169,16 @@ public class Review {
     public String getRottenTomatoesRating(){
         return rottenTomatoesRating;
     }
+    public String getTotalSeasons() {
+        return totalSeasons;
+    }
     public List<Rating> getRatings() {
         return ratings;
     }
     public int getId() {
         return id;
     }
+
 
     @Override
     public String toString() {
