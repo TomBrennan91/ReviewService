@@ -111,7 +111,7 @@ public class ReviewController {
                     if (review.getImdbID() == null || review.getPoster().equals("N/A")){
                         System.err.println("failed to find '" + title + "'");
                     } else {
-                        reviewService.addReview(review);
+                        reviewService.saveReview(review);
                         if (review.getType().equalsIgnoreCase("movie")){
                             movies.add(review);
                         } else {

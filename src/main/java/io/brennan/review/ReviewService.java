@@ -21,7 +21,7 @@ public class ReviewService {
         return reviewRepository.findByTitle(title);
     }
 
-    public void addReview(Review review){
+    public void saveReview(Review review){
         reviewRepository.save(review);
     }
 }

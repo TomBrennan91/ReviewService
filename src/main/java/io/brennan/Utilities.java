@@ -1,14 +1,19 @@
 package io.brennan;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
-public class Utilities {
+public interface Utilities {
 
-  public static String getHTML(String urlToRead) throws IOException {
+  static String getHTML(String urlToRead) throws IOException {
     StringBuilder result = new StringBuilder();
     URL url = new URL(urlToRead);
     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -20,6 +25,28 @@ public class Utilities {
     }
     rd.close();
     return result.toString();
+  }
+
+  static String transformResponseToString(HttpResponse response) throws IOException {
+    HttpEntity entity = response.getEntity();
+    String responseString = "";
+    if (entity != null) {
+      try (InputStream inStream = entity.getContent()) {
+        responseString = parseStream(inStream);
+      }
+    }
+    return responseString;
+  }
+
+  static String parseStream(InputStream inputStream) throws IOException{
+    StringBuilder stringBuilder = new StringBuilder();
+    String line;
+    try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+      while ((line = bufferedReader.readLine()) != null) {
+        stringBuilder.append(line);
+      }
+    }
+    return stringBuilder.toString();
   }
 
 }
