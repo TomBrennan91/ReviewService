@@ -6,5 +6,5 @@ import javax.persistence.NonUniqueResultException;
 
 public interface ReviewRepository extends CrudRepository<Review, Integer> {
 
-    public Review findByTitle(String title) throws NonUniqueResultException;
+    public Iterable<Review> findAllByTitle(String title) throws NonUniqueResultException;
 }
