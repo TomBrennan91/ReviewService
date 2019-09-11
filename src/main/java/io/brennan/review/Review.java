@@ -59,7 +59,6 @@ public class Review {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
         Review review = objectMapper.readValue(jsonReview, Review.class);
-        System.out.println(review.toString());
         review.extractID();
         review.extractRottenTomatoesRating();
         return review;
@@ -102,7 +101,6 @@ public class Review {
     }
 
     private void extractID(){
-        System.out.println("attempting to extract ID from " + imdbID);
         if (imdbID != null  && imdbID.length() > 2){
             try {
                 id = Integer.parseInt(imdbID.substring(2));
@@ -182,10 +180,12 @@ public class Review {
 
     @Override
     public String toString() {
-        return "Review{" +
-                "id=" + id +
-                ", imdbID='" + imdbID + '\'' +
+        return "{" +
+                "imdbID='" + imdbID + '\'' +
                 ", title='" + title + '\'' +
+                ", year='" + year + '\'' +
+                ", type='" + type + '\'' +
+                ", poster='" + poster + '\'' +
                 '}';
     }
 }

@@ -6,6 +6,7 @@ import io.brennan.Utilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.NonUniqueResultException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -104,31 +105,38 @@ public class ReviewController {
         ArrayList<Review> series = new ArrayList<>();
 
         for (String title : titles){
-            Review reviewFromDB = reviewService.getByTitle(title);
-            if (reviewFromDB == null) {
-                try {
-                    Review review = Review.getReviewFromTitle(title, year);
-                    if (review.getImdbID() == null || review.getPoster().equals("N/A")){
-                        System.err.println("failed to find '" + title + "'");
-                    } else {
-                        reviewService.saveReview(review);
-                        if (review.getType().equalsIgnoreCase("movie")){
-                            movies.add(review);
+            try {
+                Review reviewFromDB = reviewService.getByTitle(title);
+                if (reviewFromDB == null) {
+                    try {
+                        Review review = Review.getReviewFromTitle(title, year);
+                        if (review.getImdbID() == null || review.getPoster().equals("N/A")){
+                            System.err.println("failed to find '" + title + "'");
                         } else {
-                            series.add(review);
+                            System.out.println("saving new review " + review.getTitle() + " " + review.getImdbID());
+                            reviewService.saveReview(review);
+                            if (review.getType().equalsIgnoreCase("movie")){
+                                movies.add(review);
+                            } else {
+                                series.add(review);
+                            }
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else {
-                if (reviewFromDB.getType().equalsIgnoreCase("movie")){
-                    movies.add(reviewFromDB);
                 } else {
-                    series.add(reviewFromDB);
+                    if (reviewFromDB.getType().equalsIgnoreCase("movie")){
+                        movies.add(reviewFromDB);
+                    } else {
+                        series.add(reviewFromDB);
+                    }
+                    DBcounter.incrementAndGet();
                 }
-                DBcounter.incrementAndGet();
+            } catch (NonUniqueResultException e) {
+                System.err.println("non unique result for title '" + title + "'");
             }
+
+
         }
 
         System.out.println("request # " + (counter.addAndGet(movies.size() + series.size())));

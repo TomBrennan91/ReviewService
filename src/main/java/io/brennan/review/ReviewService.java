@@ -3,6 +3,8 @@ package io.brennan.review;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.NonUniqueResultException;
+
 @Service
 public class ReviewService {
 
@@ -17,7 +19,7 @@ public class ReviewService {
         return  reviewRepository.findById(id).get();
     }
 
-    public Review getByTitle(String title){
+    public Review getByTitle(String title) throws NonUniqueResultException {
         return reviewRepository.findByTitle(title);
     }
 
