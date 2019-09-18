@@ -29,6 +29,7 @@ public class ReviewController {
     @CrossOrigin
     @GetMapping("/boxofficetop5")
     public String getBoxOfficeTop5() throws IOException {
+        System.out.println("getBoxOfficeTOp5");
         String rawMojo = Utilities.getHTML("https://www.boxofficemojo.com/data/js/wknd5.php");
         String[] splitMojo = rawMojo.split("<td class=mojo_row>");
         StringBuilder formattedMojo = new StringBuilder();

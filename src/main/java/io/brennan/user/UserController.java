@@ -1,15 +1,18 @@
 package io.brennan.user;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.brennan.review.Review;
+import io.brennan.review.ReviewResponse;
 import io.brennan.review.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Set;
 
@@ -23,6 +26,7 @@ public class UserController {
   @Autowired
   private ReviewService reviewService;
 
+  @CrossOrigin
   @PostMapping("new")
   public ResponseEntity createUser(@RequestBody User user){
     if (user != null && user.getEmail() != null && user.getEmail().contains("@")){
@@ -37,6 +41,7 @@ public class UserController {
     }
   }
 
+  @CrossOrigin
   @PostMapping("login")
   public ResponseEntity login(@RequestBody User user){
     if (authenticateUser(user)){
@@ -46,6 +51,7 @@ public class UserController {
     }
   }
 
+  @CrossOrigin
   @PostMapping("reset")
   public ResponseEntity resetPassword(@RequestBody User user){
     Optional<User> existingUser = userService.findByEmail(user.getEmail());
@@ -61,17 +67,30 @@ public class UserController {
     return (existingUser.isPresent() && existingUser.get().getPassword().equals(user.getPassword()));
   }
 
-  @PostMapping("retrieve")
-  public Set<Review> getForUser(@RequestBody User user){
+  @CrossOrigin
+  @PostMapping(path = "retrieve", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ReviewResponse getForUser(@RequestBody String userJson) throws IOException {
+    System.out.println("Retrieving reviews for " + userJson);
+    ObjectMapper mapper = new ObjectMapper();
+    User user = mapper.readValue(userJson, User.class);
     if (authenticateUser(user)){
-      return userService.findByEmail(user.getEmail()).get().getReviews();
+      Set<Review> answer = userService.findByEmail(user.getEmail()).get().getReviews();
+      System.out.println(mapper.writeValueAsString(answer));
+      ArrayList<Review> reviews = new ArrayList<>();
+      reviews.addAll(answer);
+
+      return new ReviewResponse(null, reviews);
     } else {
       return null;
     }
   }
 
-  @PostMapping("addreview")
-  public ResponseEntity addReviewToUser(@RequestBody User user){
+  @CrossOrigin
+  @PostMapping(path = "addreview", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity addReviewToUser(@RequestBody String userJson) throws IOException{
+    System.out.println("adding reviews to " + userJson);
+    ObjectMapper mapper = new ObjectMapper();
+    User user = mapper.readValue(userJson, User.class);
     if (authenticateUser(user)){
       if (user.getNewReviewId() != null){
         Review existingReview = reviewService.getReview(user.getNewReviewId());
@@ -88,8 +107,12 @@ public class UserController {
     return new ResponseEntity("Invalid email or password", HttpStatus.BAD_REQUEST);
   }
 
-  @PostMapping("removereview")
-  public ResponseEntity removeReviewFromUser(@RequestBody User user){
+  @CrossOrigin
+  @PostMapping(path = "removereview", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity removeReviewFromUser(@RequestBody String userJson) throws IOException{
+    System.out.println("removing reviews from " + userJson);
+    ObjectMapper mapper = new ObjectMapper();
+    User user = mapper.readValue(userJson, User.class);
     if (authenticateUser(user)){
       if (user.getNewReviewId() != null){
         User existingUser = userService.findByEmail(user.getEmail()).get();
