@@ -1,6 +1,7 @@
 package io.brennan.user;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.brennan.review.Review;
 import io.brennan.review.ReviewResponse;
@@ -27,12 +28,16 @@ public class UserController {
   private ReviewService reviewService;
 
   @CrossOrigin
-  @PostMapping("new")
-  public ResponseEntity createUser(@RequestBody User user){
+  @GetMapping("new")
+  public ResponseEntity createUser(@RequestHeader(value = "email", defaultValue = "") String email,
+                                   @RequestHeader(value = "password", defaultValue = "") String password){
+    User user = new User(email, password);
+    System.out.println("create user request " + user.getEmail() + user.getPassword());
     if (user != null && user.getEmail() != null && user.getEmail().contains("@")){
       if (user.getPassword() != null  && user.getPassword().length() >=6){
         userService.save(user);
-        return new ResponseEntity(HttpStatus.OK);
+        System.out.println("created new user: " + user.getEmail());
+        return new ResponseEntity("User account created", HttpStatus.OK);
       } else {
         return new ResponseEntity("Invalid Password", HttpStatus.BAD_REQUEST);
       }
@@ -42,12 +47,14 @@ public class UserController {
   }
 
   @CrossOrigin
-  @PostMapping("login")
-  public ResponseEntity login(@RequestBody User user){
+  @GetMapping(value = "login", produces = MediaType.APPLICATION_JSON_VALUE)
+  public String login(@RequestHeader(value = "email", defaultValue = "") String email,
+                              @RequestHeader(value = "password", defaultValue = "") String password) throws JsonProcessingException {
+    User user = new User(email, password);
     if (authenticateUser(user)){
-      return new ResponseEntity(HttpStatus.OK);
+      return new ObjectMapper().writeValueAsString("OK"); //new ResponseEntity("thumbs up from server" , HttpStatus.OK);
     } else {
-      return new ResponseEntity("Invalid email or password", HttpStatus.BAD_REQUEST);
+      return new ObjectMapper().writeValueAsString("Invalid email or password"); //new ResponseEntity("Invalid email or password", HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -62,7 +69,7 @@ public class UserController {
     return new ResponseEntity(HttpStatus.OK);
   }
 
-  public boolean authenticateUser(@RequestBody User user){
+  public boolean authenticateUser(User user){
     Optional<User> existingUser = userService.findByEmail(user.getEmail());
     return (existingUser.isPresent() && existingUser.get().getPassword().equals(user.getPassword()));
   }
@@ -75,6 +82,7 @@ public class UserController {
     User user = mapper.readValue(userJson, User.class);
     if (authenticateUser(user)){
       Set<Review> answer = userService.findByEmail(user.getEmail()).get().getReviews();
+      answer.forEach(review -> review.setOnList(true));
       System.out.println(mapper.writeValueAsString(answer));
       ArrayList<Review> reviews = new ArrayList<>();
       reviews.addAll(answer);
@@ -84,6 +92,8 @@ public class UserController {
       return null;
     }
   }
+
+
 
   @CrossOrigin
   @PostMapping(path = "addreview", consumes = MediaType.APPLICATION_JSON_VALUE)

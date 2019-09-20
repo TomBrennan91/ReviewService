@@ -44,6 +44,7 @@ public class Review {
     private String website;
     private String rated;
     private String totalSeasons;
+    private Boolean onList;
 
 
 
@@ -176,7 +177,12 @@ public class Review {
     public int getId() {
         return id;
     }
-
+    public Boolean getOnList() {
+        return onList;
+    }
+    public void setOnList(Boolean onList) {
+        this.onList = onList;
+    }
 
     @Override
     public String toString() {

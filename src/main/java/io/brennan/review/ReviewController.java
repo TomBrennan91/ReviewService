@@ -3,6 +3,8 @@ package io.brennan.review;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.brennan.Utilities;
+import io.brennan.user.User;
+import io.brennan.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,8 +12,7 @@ import javax.persistence.NonUniqueResultException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
@@ -19,6 +20,8 @@ public class ReviewController {
 
     @Autowired
     private ReviewService reviewService;
+
+    @Autowired UserService userService;
 
     private AtomicLong counter = new AtomicLong();
 
@@ -45,11 +48,15 @@ public class ReviewController {
     @CrossOrigin
     @GetMapping("/getall")
     public ReviewResponse getAll(@RequestParam(value = "sort", defaultValue = "") String sorting,
-                                   @RequestParam(value = "filter", defaultValue = "") String filter){
+                                 @RequestParam(value = "filter", defaultValue = "") String filter,
+                                 @RequestHeader(value = "email", defaultValue = "") String email,
+                                 @RequestHeader(value = "password", defaultValue = "") String password){
         System.out.println("getting all " + "sorting=" + sorting + ",filter=" + filter);
 
         ArrayList <Review> reviews = new ArrayList<>();
         reviewService.getAll().forEach(review -> reviews.add(review));
+
+        markReviewsOnList(email, password, reviews);
 
         try {
             filterReviews(reviews, filter);
@@ -75,11 +82,21 @@ public class ReviewController {
         return new ReviewResponse(series, movies);
     }
 
-    @GetMapping("search/{id}")
-    public Review findbyTitle(@PathVariable String title){
-        System.out.println("getting io.brennan.review " + title);
-        return reviewService.getByTitle(title);
+    private void markReviewsOnList(String email, String password, ArrayList<Review> reviews) {
+        //mark Reviews on list
+        User user = new User(email, password);
+        if (authenticateUser(user)) {
+            Set<Review> userList = userService.findByEmail(email).get().getReviews();
+            Set<Integer> userListIds = new HashSet<>();
+            userList.forEach(review -> userListIds.add(review.getId()));
+            for (Review review : reviews){
+                if (userListIds.contains(review.getId())){
+                    review.setOnList(true);
+                }
+            }
+        }
     }
+
 
     @CrossOrigin
     @GetMapping("/reviewsServiced")
@@ -95,7 +112,9 @@ public class ReviewController {
     public ReviewResponse getReviews(@RequestBody String input,
                                      @RequestParam(value = "sort", defaultValue = "") String sorting,
                                      @RequestParam(value = "filter", defaultValue = "") String filter,
-                                     @RequestParam(value = "year", defaultValue = "") String year){
+                                     @RequestParam(value = "year", defaultValue = "") String year,
+                                     @RequestHeader(value = "email", defaultValue = "") String email,
+                                     @RequestHeader(value = "password", defaultValue = "") String password){
         System.out.println(input);
         System.out.println("sorting=" + sorting + ",filter=" + filter);
         input = input.replace("\"", "");
@@ -141,6 +160,9 @@ public class ReviewController {
         }
 
         System.out.println("request # " + (counter.addAndGet(movies.size() + series.size())));
+
+        markReviewsOnList(email, password, movies);
+        markReviewsOnList(email, password, series);
 
         try {
             filterReviews(series, filter);
@@ -225,5 +247,9 @@ public class ReviewController {
         }
     }
 
+    public boolean authenticateUser(User user){
+        Optional<User> existingUser = userService.findByEmail(user.getEmail());
+        return (existingUser.isPresent() && existingUser.get().getPassword().equals(user.getPassword()));
+    }
 }
 

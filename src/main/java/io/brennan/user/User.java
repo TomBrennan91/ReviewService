@@ -10,34 +10,42 @@ import java.util.Set;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
-  @Id
-  @GeneratedValue
-  private Integer id;
-  private String email;
-  private String password;
-  @Transient
-  private Integer newReviewId;
+    @Id
+    @GeneratedValue
+    private Integer id;
+    private String email;
+    private String password;
+    @Transient
+    private Integer newReviewId;
 
-  @ManyToMany
-  private Set<Review> reviews;
+    @ManyToMany
+    private Set<Review> reviews;
 
-  public Integer getId() {
+    public Integer getId() {
     return id;
-  }
+    }
 
-  public String getEmail() {
+    public String getEmail() {
     return email;
-  }
+    }
 
-  public String getPassword() {
+    public String getPassword() {
     return password;
-  }
+    }
 
-  public Set<Review> getReviews() {
+    public Set<Review> getReviews() {
     return reviews;
-  }
+    }
 
-  public Integer getNewReviewId() {
+    public Integer getNewReviewId() {
     return newReviewId;
-  }
+    }
+
+    public User() {
+    }
+
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }
