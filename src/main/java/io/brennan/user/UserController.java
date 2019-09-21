@@ -29,20 +29,26 @@ public class UserController {
 
   @CrossOrigin
   @GetMapping("new")
-  public ResponseEntity createUser(@RequestHeader(value = "email", defaultValue = "") String email,
-                                   @RequestHeader(value = "password", defaultValue = "") String password){
-    User user = new User(email, password);
-    System.out.println("create user request " + user.getEmail() + user.getPassword());
-    if (user != null && user.getEmail() != null && user.getEmail().contains("@")){
-      if (user.getPassword() != null  && user.getPassword().length() >=6){
-        userService.save(user);
-        System.out.println("created new user: " + user.getEmail());
-        return new ResponseEntity("User account created", HttpStatus.OK);
+  public String createUser(@RequestHeader(value = "email", defaultValue = "") String email,
+                                   @RequestHeader(value = "password", defaultValue = "") String password) throws JsonProcessingException{
+
+    System.out.println("create user request " + email + password);
+    if (email != null && email.contains("@")){
+      if (password != null  && password.length() >=6){
+        Optional<User> existingUser = userService.findByEmail(email);
+        if (existingUser.isPresent()){
+          System.out.println("user " + email + " already exists");
+        } else {
+          User user = new User(email, password);
+          System.out.println("created new user: " + user.getEmail());
+          userService.save(user);
+        }
+        return new ObjectMapper().writeValueAsString("User account created");
       } else {
-        return new ResponseEntity("Invalid Password", HttpStatus.BAD_REQUEST);
+        return new ObjectMapper().writeValueAsString("Invalid Password");
       }
     } else {
-      return new ResponseEntity("Invalid Email", HttpStatus.BAD_REQUEST);
+      return new ObjectMapper().writeValueAsString("Invalid Email");
     }
   }
 
