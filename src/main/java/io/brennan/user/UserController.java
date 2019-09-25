@@ -81,12 +81,14 @@ public class UserController {
   }
 
   @CrossOrigin
-  @PostMapping(path = "retrieve", consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ReviewResponse getForUser(@RequestBody String userJson) throws IOException {
-    System.out.println("Retrieving reviews for " + userJson);
-    ObjectMapper mapper = new ObjectMapper();
-    User user = mapper.readValue(userJson, User.class);
+  @GetMapping("retrieve")
+  public ReviewResponse getForUser(@RequestHeader(value = "email", defaultValue = "") String email,
+                                   @RequestHeader(value = "password", defaultValue = "") String password) throws IOException {
+    User user = new User(email, password);
     if (authenticateUser(user)){
+      System.out.println("Retrieving reviews for " + email);
+      ObjectMapper mapper = new ObjectMapper();
+      User existingUser = userService.findByEmail(email).get();
       Set<Review> answer = userService.findByEmail(user.getEmail()).get().getReviews();
       answer.forEach(review -> review.setOnList(true));
       System.out.println(mapper.writeValueAsString(answer));
