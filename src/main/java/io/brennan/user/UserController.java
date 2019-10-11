@@ -43,7 +43,7 @@ public class UserController {
           System.out.println("created new user: " + user.getEmail());
           userService.save(user);
         }
-        return new ObjectMapper().writeValueAsString("User account created");
+        return new ObjectMapper().writeValueAsString("OK");
       } else {
         return new ObjectMapper().writeValueAsString("Invalid Password");
       }
@@ -88,7 +88,6 @@ public class UserController {
     if (authenticateUser(user)){
       System.out.println("Retrieving reviews for " + email);
       ObjectMapper mapper = new ObjectMapper();
-      User existingUser = userService.findByEmail(email).get();
       Set<Review> answer = userService.findByEmail(user.getEmail()).get().getReviews();
       answer.forEach(review -> review.setOnList(true));
       System.out.println(mapper.writeValueAsString(answer));

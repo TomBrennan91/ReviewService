@@ -23,11 +23,15 @@ public class ReviewService {
     public Review getByTitle(String title) throws NonUniqueResultException {
         Iterator<Review> reviews = reviewRepository.findAllByTitle(title).iterator();
         if (reviews.hasNext()){
-            Review latestReview  = null;
+            Review latestReview  = reviews.next();
             while (reviews.hasNext()){
-                 latestReview = reviews.next();
+                 Review currentReview = reviews.next();
+                 if (latestReview.getIntYear() != null) {
+                     if ((currentReview.getIntYear() == null) || currentReview.getIntYear() > latestReview.getIntYear()) {
+                         latestReview = currentReview;
+                     }
+                 }
             }
-            //todo: make this return the latest review;
             return latestReview;
         }
         return null;

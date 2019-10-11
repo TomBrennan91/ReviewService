@@ -25,6 +25,7 @@ public class Review {
     private String imdbID;
     private String title;
     private String year;
+    private Integer intYear;
     private String runtime;
     private String imdbRating;
     private String metascore;
@@ -62,6 +63,7 @@ public class Review {
         Review review = objectMapper.readValue(jsonReview, Review.class);
         review.extractID();
         review.extractRottenTomatoesRating();
+        review.extractIntYear();
         return review;
     }
 
@@ -105,6 +107,16 @@ public class Review {
         if (imdbID != null  && imdbID.length() > 2){
             try {
                 id = Integer.parseInt(imdbID.substring(2));
+            } catch (NumberFormatException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void extractIntYear(){
+        if (year != null && year.length() >= 4){
+            try {
+                intYear = Integer.parseInt(year.substring(0,4));
             } catch (NumberFormatException e){
                 e.printStackTrace();
             }
@@ -182,6 +194,9 @@ public class Review {
     }
     public void setOnList(Boolean onList) {
         this.onList = onList;
+    }
+    public Integer getIntYear() {
+        return intYear;
     }
 
     @Override

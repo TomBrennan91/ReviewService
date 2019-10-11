@@ -38,6 +38,7 @@ public class ReviewController {
         StringBuilder formattedMojo = new StringBuilder();
         for (int i = 1 ; i <= 5 ; i++){
             String[] before = splitMojo[i].split("</td>",2);
+            before = before[0].split("\\(");
             formattedMojo.append(before[0].substring(3) + "\r\n");
         }
         ObjectMapper mapper = new ObjectMapper();
