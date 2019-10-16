@@ -1,21 +1,17 @@
 package io.brennan.review;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.brennan.Application;
+import io.brennan.Utilities;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +25,7 @@ public class Review {
     private String imdbID;
     private String title;
     private String year;
+    private Integer intYear;
     private String runtime;
     private String imdbRating;
     private String metascore;
@@ -47,34 +44,28 @@ public class Review {
     private String poster;
     private String website;
     private String rated;
+    private String totalSeasons;
+    private Boolean onList;
 
 
 
-    private static String getHTML(String urlToRead) throws IOException {
-        StringBuilder result = new StringBuilder();
-        URL url = new URL(urlToRead);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        String line;
-        while ((line = rd.readLine()) != null) {
-            result.append(line);
+    public static Review getReviewFromTitle(String title, String year) throws IOException {
+        String jsonReview;
+        if (year.equals("now")){
+            Integer thisYear = LocalDateTime.now().getYear();
+            year = thisYear.toString();
+            jsonReview  = Utilities.getHTML("http://www.omdbapi.com/?apikey=" + Application.getAPIKey() + "&t=" + URLEncoder.encode(title, "UTF-8") + "&y=" + year);
+        } else {
+            jsonReview  = Utilities.getHTML("http://www.omdbapi.com/?apikey=" + Application.getAPIKey() + "&t=" + URLEncoder.encode(title, "UTF-8"));
         }
-        rd.close();
-        return result.toString();
-    }
-
-    public static Review getReviewFromTitle(String title) throws IOException {
-        String jsonReview  = getHTML("http://www.omdbapi.com/?apikey=" + Application.getAPIKey() + "&t=" + URLEncoder.encode(title, "UTF-8"));
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
         Review review = objectMapper.readValue(jsonReview, Review.class);
-        System.out.println(review.toString());
         review.extractID();
         review.extractRottenTomatoesRating();
+        review.extractIntYear();
         return review;
     }
-
 
     public Integer safeGetYear() {
         return Integer.parseInt(year.split("–")[0]);
@@ -96,31 +87,36 @@ public class Review {
     }
 
     private void extractRottenTomatoesRating(){
-        try {
-
-            if (ratings != null && ratings.size() > 0) {
-                System.out.println("extracting RT Rating from " + ratings.size() + " ratings");
-                for (Rating rating : ratings) {
-                    System.out.println(rating.toString());
-                }
+        if (ratings == null || ratings.size() == 0) {
+            this.rottenTomatoesRating = "N/A";
+        } else {
+            try {
                 Optional<Rating> RTRating = ratings.stream()
                                                    .filter(rating -> rating.source.equalsIgnoreCase("Rotten Tomatoes"))
                                                    .findAny();
                 if (RTRating.isPresent()) {
-                    System.out.println("RT rating extracted " + RTRating.get().value);
-                    this.rottenTomatoesRating = RTRating.get().value;
+                    this.rottenTomatoesRating = RTRating.get().value.replace("%", "");
                 }
+            } catch (NullPointerException e){
+                e.printStackTrace();
             }
-        } catch (NullPointerException e){
-            e.printStackTrace();
         }
     }
 
     private void extractID(){
-        System.out.println("attempting to extract ID from " + imdbID);
         if (imdbID != null  && imdbID.length() > 2){
             try {
                 id = Integer.parseInt(imdbID.substring(2));
+            } catch (NumberFormatException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void extractIntYear(){
+        if (year != null && year.length() >= 4){
+            try {
+                intYear = Integer.parseInt(year.substring(0,4));
             } catch (NumberFormatException e){
                 e.printStackTrace();
             }
@@ -184,19 +180,33 @@ public class Review {
     public String getRottenTomatoesRating(){
         return rottenTomatoesRating;
     }
+    public String getTotalSeasons() {
+        return totalSeasons;
+    }
     public List<Rating> getRatings() {
         return ratings;
     }
     public int getId() {
         return id;
     }
+    public Boolean getOnList() {
+        return onList;
+    }
+    public void setOnList(Boolean onList) {
+        this.onList = onList;
+    }
+    public Integer getIntYear() {
+        return intYear;
+    }
 
     @Override
     public String toString() {
-        return "Review{" +
-                "id=" + id +
-                ", imdbID='" + imdbID + '\'' +
+        return "{" +
+                "imdbID='" + imdbID + '\'' +
                 ", title='" + title + '\'' +
+                ", year='" + year + '\'' +
+                ", type='" + type + '\'' +
+                ", poster='" + poster + '\'' +
                 '}';
     }
 }

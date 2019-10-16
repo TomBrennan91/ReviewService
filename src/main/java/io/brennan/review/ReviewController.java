@@ -2,13 +2,17 @@ package io.brennan.review;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.brennan.Utilities;
+import io.brennan.user.User;
+import io.brennan.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.NonUniqueResultException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
@@ -17,6 +21,8 @@ public class ReviewController {
     @Autowired
     private ReviewService reviewService;
 
+    @Autowired UserService userService;
+
     private AtomicLong counter = new AtomicLong();
 
     private AtomicLong DBcounter = new AtomicLong();
@@ -24,13 +30,34 @@ public class ReviewController {
     private final LocalDate startDate = LocalDate.now();
 
     @CrossOrigin
+    @GetMapping("/boxofficetop5")
+    public String getBoxOfficeTop5() throws IOException {
+        System.out.println("getBoxOfficeTOp5");
+        String rawMojo = Utilities.getHTML("https://www.boxofficemojo.com/data/js/wknd5.php");
+        String[] splitMojo = rawMojo.split("<td class=mojo_row>");
+        StringBuilder formattedMojo = new StringBuilder();
+        for (int i = 1 ; i <= 5 ; i++){
+            String[] before = splitMojo[i].split("</td>",2);
+            before = before[0].split("\\(");
+            formattedMojo.append(before[0].substring(3) + "\r\n");
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        String output = mapper.writeValueAsString(formattedMojo);
+        return output.replace("&amp;","&");
+    }
+
+    @CrossOrigin
     @GetMapping("/getall")
-    public Iterable<Review> getAll(@RequestParam(value = "sort", defaultValue = "") String sorting,
-                                   @RequestParam(value = "filter", defaultValue = "") String filter){
+    public ReviewResponse getAll(@RequestParam(value = "sort", defaultValue = "") String sorting,
+                                 @RequestParam(value = "filter", defaultValue = "") String filter,
+                                 @RequestHeader(value = "email", defaultValue = "") String email,
+                                 @RequestHeader(value = "password", defaultValue = "") String password){
         System.out.println("getting all " + "sorting=" + sorting + ",filter=" + filter);
 
         ArrayList <Review> reviews = new ArrayList<>();
         reviewService.getAll().forEach(review -> reviews.add(review));
+
+        markReviewsOnList(email, password, reviews);
 
         try {
             filterReviews(reviews, filter);
@@ -42,14 +69,35 @@ public class ReviewController {
         counter.addAndGet(reviews.size());
         DBcounter.addAndGet(reviews.size());
 
-        return reviews;
+        ArrayList<Review> movies = new ArrayList<>();
+        ArrayList<Review> series = new ArrayList<>();
+
+        for (Review review : reviews){
+            if (review.getType().equalsIgnoreCase("movie")){
+                movies.add(review);
+            } else {
+                series.add(review);
+            }
+        }
+
+        return new ReviewResponse(series, movies);
     }
 
-    @GetMapping("search/{id}")
-    public Review findbyTitle(@PathVariable String title){
-        System.out.println("getting io.brennan.review " + title);
-        return reviewService.getByTitle(title);
+    private void markReviewsOnList(String email, String password, ArrayList<Review> reviews) {
+        //mark Reviews on list
+        User user = new User(email, password);
+        if (authenticateUser(user)) {
+            Set<Review> userList = userService.findByEmail(email).get().getReviews();
+            Set<Integer> userListIds = new HashSet<>();
+            userList.forEach(review -> userListIds.add(review.getId()));
+            for (Review review : reviews){
+                if (userListIds.contains(review.getId())){
+                    review.setOnList(true);
+                }
+            }
+        }
     }
+
 
     @CrossOrigin
     @GetMapping("/reviewsServiced")
@@ -62,48 +110,73 @@ public class ReviewController {
 
     @CrossOrigin
     @PostMapping("/review")
-    public ArrayList<Review> reviews(@RequestBody String input,
+    public ReviewResponse getReviews(@RequestBody String input,
                                      @RequestParam(value = "sort", defaultValue = "") String sorting,
-                                     @RequestParam(value = "filter", defaultValue = "") String filter){
+                                     @RequestParam(value = "filter", defaultValue = "") String filter,
+                                     @RequestParam(value = "year", defaultValue = "") String year,
+                                     @RequestHeader(value = "email", defaultValue = "") String email,
+                                     @RequestHeader(value = "password", defaultValue = "") String password){
         System.out.println(input);
         System.out.println("sorting=" + sorting + ",filter=" + filter);
         input = input.replace("\"", "");
         String titles[] = input.split("~");
 
-        ArrayList<Review> reviews = new ArrayList<>();
+
+        ArrayList<Review> movies = new ArrayList<>();
+        ArrayList<Review> series = new ArrayList<>();
+
         for (String title : titles){
-            Review reviewFromDB = reviewService.getByTitle(title);
-            if (reviewFromDB == null) {
-                try {
-                    System.out.println("review not cached");
-                    Review review = Review.getReviewFromTitle(title);
-                    if (review.getImdbID() == null){
-                        System.err.println("failed to find '" + title + "'");
-                    } else {
-                        reviewService.addReview(review);
-                        reviews.add(review);
+            try {
+                Review reviewFromDB = reviewService.getByTitle(title);
+                if (reviewFromDB == null) {
+                    try {
+                        Review review = Review.getReviewFromTitle(title, year);
+                        if (review.getImdbID() == null || review.getPoster().equals("N/A")){
+                            System.err.println("failed to find '" + title + "'");
+                        } else {
+                            System.out.println("saving new review " + review.getTitle() + " " + review.getImdbID());
+                            reviewService.saveReview(review);
+                            if (review.getType().equalsIgnoreCase("movie")){
+                                movies.add(review);
+                            } else {
+                                series.add(review);
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } else {
+                    if (reviewFromDB.getType().equalsIgnoreCase("movie")){
+                        movies.add(reviewFromDB);
+                    } else {
+                        series.add(reviewFromDB);
+                    }
+                    DBcounter.incrementAndGet();
                 }
-            } else {
-                System.out.println("review cached");
-                reviews.add(reviewFromDB);
-                DBcounter.incrementAndGet();
+            } catch (NonUniqueResultException e) {
+                System.err.println("non unique result for title '" + title + "'");
             }
+
+
         }
 
-        System.out.println("request # " + (counter.addAndGet(reviews.size())));
+        System.out.println("request # " + (counter.addAndGet(movies.size() + series.size())));
+
+        markReviewsOnList(email, password, movies);
+        markReviewsOnList(email, password, series);
 
         try {
-            filterReviews(reviews, filter);
-            sortReviews(reviews, sorting);
+            filterReviews(series, filter);
+            filterReviews(movies, filter);
+            sortReviews(series, sorting);
+            sortReviews(movies, sorting);
         } catch (NumberFormatException e){
             System.err.println(e.getMessage());
         }
 
-        System.out.println(titles.length + " -> " + reviews.size());
-        return reviews;
+        System.out.println(titles.length + " -> " + series.size() + "+" + movies.size());
+
+        return new ReviewResponse(series, movies);
     }
 
     private void sortReviews( ArrayList<Review> reviews, String sorting) throws NumberFormatException{
@@ -175,5 +248,9 @@ public class ReviewController {
         }
     }
 
+    public boolean authenticateUser(User user){
+        Optional<User> existingUser = userService.findByEmail(user.getEmail());
+        return (existingUser.isPresent() && existingUser.get().getPassword().equals(user.getPassword()));
+    }
 }
 
