@@ -32,13 +32,15 @@ public class ReviewController {
     @CrossOrigin
     @GetMapping("/boxofficetop5")
     public String getBoxOfficeTop5() throws IOException {
-        System.out.println("getBoxOfficeTOp5");
+        System.out.println("getBoxOfficeTop5");
         String rawMojo = Utilities.getHTML("https://www.boxofficemojo.com/data/js/wknd5.php");
-        String[] splitMojo = rawMojo.split("<td class=mojo_row>");
+//        System.out.println(rawMojo);
+        String[] splitMojo = rawMojo.split("&lt;tr&gt;&lt;td class=mojo_row&gt;");
         StringBuilder formattedMojo = new StringBuilder();
         for (int i = 1 ; i <= 5 ; i++){
-            String[] before = splitMojo[i].split("</td>",2);
+            String[] before = splitMojo[i].split("&lt;/td&gt;",2);
             before = before[0].split("\\(");
+//            System.out.println(before[0]);
             formattedMojo.append(before[0].substring(3) + "\r\n");
         }
         ObjectMapper mapper = new ObjectMapper();
@@ -117,10 +119,9 @@ public class ReviewController {
                                      @RequestHeader(value = "email", defaultValue = "") String email,
                                      @RequestHeader(value = "password", defaultValue = "") String password){
         System.out.println(input);
-        System.out.println("sorting=" + sorting + ",filter=" + filter);
+        if (sorting != "" || sorting != filter) System.out.println("sorting=" + sorting + ",filter=" + filter);
         input = input.replace("\"", "");
         String titles[] = input.split("~");
-
 
         ArrayList<Review> movies = new ArrayList<>();
         ArrayList<Review> series = new ArrayList<>();
@@ -174,7 +175,7 @@ public class ReviewController {
             System.err.println(e.getMessage());
         }
 
-        System.out.println(titles.length + " -> " + series.size() + "+" + movies.size());
+        if (titles.length > series.size() + movies.size()) System.out.println(titles.length + " -> " + series.size() + "+" + movies.size());
 
         return new ReviewResponse(series, movies);
     }

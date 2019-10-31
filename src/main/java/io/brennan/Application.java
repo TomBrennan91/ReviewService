@@ -12,13 +12,13 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 
 @SpringBootApplication
 @EnableScheduling
 public class Application {
 
-    @Autowired ReviewService reviewService;
+    @Autowired
+    private ReviewService reviewService;
 
     public static void main(String[] args) throws IOException{
         setAPIKey();
@@ -56,7 +56,7 @@ public class Application {
         }
     }
 
-    private static void setAPIKey() throws IOException{
+    public static void setAPIKey() throws IOException{
         String key = System.getenv("EXTERNAL_API_KEY");
         System.out.println(key);
         if (key == null){

@@ -30,6 +30,7 @@ public class Review {
     private String imdbRating;
     private String metascore;
     private String imdbVotes;
+    private Integer intImdbVotes;
     private String type;
     private String genre;
     private String plot;
@@ -64,6 +65,7 @@ public class Review {
         review.extractID();
         review.extractRottenTomatoesRating();
         review.extractIntYear();
+        review.extractImdbVotes();
         return review;
     }
 
@@ -77,7 +79,7 @@ public class Review {
         return Integer.parseInt(imdbRating.replace(".","").replace("N/A",""));
     }
     public Integer safeGetImdbVotes() {
-        return Integer.parseInt(imdbVotes.replace(",","").replace("N/A",""));
+        return Integer.parseInt(imdbVotes.replace(",","").replace("N/A","0"));
     }
     public Integer safeGetMetascore() {
         return Integer.parseInt(metascore.replace("N/A","0"));
@@ -120,6 +122,18 @@ public class Review {
             } catch (NumberFormatException e){
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void extractImdbVotes(){
+        try {
+            if (imdbVotes == null || imdbVotes == "N/A") {
+                this.intImdbVotes = 0;
+            } else {
+                this.intImdbVotes = safeGetImdbVotes();
+            }
+        } catch (NumberFormatException e ){
+            this.intImdbVotes = 0;
         }
     }
 
@@ -195,6 +209,11 @@ public class Review {
     public void setOnList(Boolean onList) {
         this.onList = onList;
     }
+
+    public Integer getIntImdbVotes() {
+        return intImdbVotes;
+    }
+
     public Integer getIntYear() {
         return intYear;
     }

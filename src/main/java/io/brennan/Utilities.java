@@ -49,4 +49,9 @@ public interface Utilities {
     return stringBuilder.toString();
   }
 
+  static BufferedReader fromFile(String filePath, Class myClass){
+    InputStream in = myClass.getResourceAsStream(filePath);
+    return new BufferedReader(new InputStreamReader(in));
+  }
+
 }
