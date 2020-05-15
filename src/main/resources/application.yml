@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/reviewdb
+    username: root
+    password: PASSWORD
+  jpa:
+    hibernate:
+      ddl-auto: create
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: 762a4d7cecb3bc75ae6d
+            client-secret: 4c7cb9ff01b60c59f8ca8ddf43cdf6532033ff05
+          facebook:
+            client-id: 2559203677731303
+            client-secret: f8a1b855d8d20e590844247293be0878
+          google:
+            client-id: 483276978149-qpncalkhh7sfqv8o7m44n2j7r6bt1rkv.apps.googleusercontent.com
+            client-secret: 5o8lDDrq2atwX1jYLFYcK3ce
