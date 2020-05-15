@@ -64,7 +64,7 @@ public class Application {
             key = in.lines().findFirst().get();
         }
 
-        APIKey = key;
+        APIKey = "e3f73bca";
         System.out.println("API Key = " + APIKey);
     }
 }

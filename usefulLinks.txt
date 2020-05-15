@@ -1,0 +1,8 @@
+installing mysql on aws:
+
+https://tecadmin.net/install-mysql-on-amazon-linux/
+
+configuring the mysql user:
+
+https://spring.io/guides/gs/accessing-data-mysql/
+

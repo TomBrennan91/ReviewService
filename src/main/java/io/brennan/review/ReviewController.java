@@ -34,11 +34,14 @@ public class ReviewController {
     public String getBoxOfficeTop5() throws IOException {
         System.out.println("getBoxOfficeTop5");
         String rawMojo = Utilities.getHTML("https://www.boxofficemojo.com/data/js/wknd5.php");
-//        System.out.println(rawMojo);
-        String[] splitMojo = rawMojo.split("&lt;tr&gt;&lt;td class=mojo_row&gt;");
+        System.out.println(rawMojo);
+
+        String[] splitMojo = rawMojo.split("<tr><td class=mojo_row>");
         StringBuilder formattedMojo = new StringBuilder();
         for (int i = 1 ; i <= 5 ; i++){
-            String[] before = splitMojo[i].split("&lt;/td&gt;",2);
+
+            String[] before = splitMojo[i].split("</td>",2);
+            System.out.println(i + " " + before[0]);
             before = before[0].split("\\(");
 //            System.out.println(before[0]);
             formattedMojo.append(before[0].substring(3) + "\r\n");
