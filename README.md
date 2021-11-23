@@ -295,6 +295,3 @@ Guilt (2016) [6.1/10]
 Absentia (2011) [5.8/10]
 Sex and the City (2008) [5.6/10]
 Made in Chelsea (2011–) [4.7/10]
-
-
-Unfortunately though, this still hasn't convinced my girlfreind to start watching breaking bad yet...
