@@ -1,10 +1,10 @@
-package io.brennan.userreview;
-
-import io.brennan.user.User;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
+//package io.brennan.userreview;
+//
+//import io.brennan.user.User;
+//
+//import javax.persistence.Entity;
+//import javax.persistence.Id;
+//
 //@Entity
 //public class UserReview {
 //  @Id
